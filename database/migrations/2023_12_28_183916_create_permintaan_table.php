@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id('permintaan_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('jenis_permintaan', ['dinas', 'izin', 'cuti']);
-            $table->string('keperluan');
+            $table->string('keperluan')->nullable();
             $table->string('tanggal_awal');
             $table->string('tanggal_akhir');
-            $table->string('keterangan');
-            $table->string('surat_dinas');
-            $table->string('bukti_izin');
+            $table->string('keterangan')->nullable();
+            $table->string('surat_dinas')->nullable();
+            $table->string('bukti_izin')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });
