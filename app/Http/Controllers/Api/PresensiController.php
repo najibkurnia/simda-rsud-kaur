@@ -13,7 +13,7 @@ class PresensiController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
-        if ($request->ip() != '' && $request->role != 'admin') {
+        if ($request->ip_address != '192.168.1.82' && $request->role != 'admin') {
             return response()->json([
                 'message'   => 'Pastikan anda terhubung dengan internet kantor'
             ], 403);

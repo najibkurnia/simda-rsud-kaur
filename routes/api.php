@@ -21,6 +21,6 @@ Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/handle-presensi', [PresensiController::class, 'handlePresensi']);
+    Route::get('/handle-presensi', [PresensiController::class, 'handlePresensi']);
     Route::post('/handle-permintaan', [PermintaanController::class, 'handlePermintaan']);
 });
