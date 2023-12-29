@@ -7,7 +7,7 @@ use App\Models\Presensi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PresensiController extends Controller
+class PresensiApiController extends Controller
 {
     static function handlePresensi(Request $request): JsonResponse
     {

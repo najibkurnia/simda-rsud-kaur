@@ -7,7 +7,7 @@ use App\Models\Permintaan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PermintaanController extends Controller
+class PermintaanApiController extends Controller
 {
     public function handlePermintaan(Request $request): JsonResponse
     {

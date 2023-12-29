@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\AuthenticationController;
-use App\Http\Controllers\Api\PermintaanController;
-use App\Http\Controllers\Api\PresensiController;
+use App\Http\Controllers\Api\AuthenticationApiController;
+use App\Http\Controllers\Api\PermintaanApiController;
+use App\Http\Controllers\Api\PresensiApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AuthenticationController::class, 'login']);
-Route::post('/register', [AuthenticationController::class, 'register']);
-Route::post('/logout', [AuthenticationController::class, 'logout']);
+Route::post('/login', [AuthenticationApiController::class, 'login']);
+Route::post('/register', [AuthenticationApiController::class, 'register']);
+Route::post('/logout', [AuthenticationApiController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/handle-presensi', [PresensiController::class, 'handlePresensi']);
-    Route::post('/handle-permintaan', [PermintaanController::class, 'handlePermintaan']);
+    Route::get('/handle-presensi', [PresensiApiController::class, 'handlePresensi']);
+    Route::post('/handle-permintaan', [PermintaanApiController::class, 'handlePermintaan']);
 });
