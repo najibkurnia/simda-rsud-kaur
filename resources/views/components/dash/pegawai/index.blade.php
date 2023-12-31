@@ -27,20 +27,20 @@
                             </tr>
                         </thead>
                         <tbody style="vertical-align: middle">
-                            @for($i=1; $i <= 8; $i++)
+                            @foreach ($pegawai as $item)
                             <tr>
-                                <td>NIP</td>
-                                <td>Nama</td>
-                                <td>Pangkat</td>
-                                <td>Golongan</td>
-                                <td>Jabatan</td>
-                                <td>No. Telepon</td>
+                                <td>{{ $item['nip'] }}</td>
+                                <td>{{ $item['nama'] }}</td>
+                                <td>{{ $item['pangkat']->nama_pangkat }}</td>
+                                <td>{{ $item['golongan']->nama_golongan }}</td>
+                                <td>{{ $item['jabatan']->nama_jabatan }}</td>
+                                <td>{{ $item['no_telepon'] }}</td>
                                 <td>
                                     <button class="btn btn-secondary">Edit</button>
                                     <button class="btn btn-secondary">Hapus</button>
                                 </td>
                             </tr>
-                            @endfor
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
