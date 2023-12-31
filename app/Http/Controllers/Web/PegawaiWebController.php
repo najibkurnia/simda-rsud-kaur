@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Utils\ApiCollection;
+use App\Http\Utils\SearchData;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,10 +11,11 @@ use Illuminate\View\View;
 
 class PegawaiWebController extends Controller
 {
-    protected $apiData;
+    protected $dataPegawai;
+
     public function __construct()
     {
-        $this->apiData = ApiCollection::endpoint();
+        $this->dataPegawai = User::where('role', 'pegawai')->get();
     }
 
     public function showPegawai(): View
@@ -22,10 +23,19 @@ class PegawaiWebController extends Controller
         $data = [
             'title'     => 'Data PNS',
             'id_page'   => 'pegawai-index',
-            'pegawai'   => User::where('role', 'pegawai')->get(),
+            'pegawai'   => $this->dataPegawai,
         ];
 
         return view('components.dash.pegawai.index', $data);
+    }
+
+    public function searchPegawai(Request $request)
+    {
+        $table = new User();
+        $field = 'nama';
+        $searchKey = $request->input('key');
+        $this->dataPegawai = SearchData::find($table, $searchKey, $field);
+        return $this->showPegawai();
     }
 
     public function handleTambahPegawai(Request $request)

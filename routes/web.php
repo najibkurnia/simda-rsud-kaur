@@ -16,3 +16,6 @@ Route::get('/data-dinas', [PermintaanWebController::class, 'showDataDinas'])->na
 Route::get('/data-cuti', [PermintaanWebController::class, 'showDataCuti'])->name('data-cuti');
 Route::get('/data-pelanggaran', [PelanggaranWebController::class, 'showPelanggaran'])->name('data-pelanggaran');
 Route::get('/data-pegawai', [PegawaiWebController::class, 'showPegawai'])->name('data-pegawai');
+Route::prefix('/cari')->group(function () {
+    Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');
+});
