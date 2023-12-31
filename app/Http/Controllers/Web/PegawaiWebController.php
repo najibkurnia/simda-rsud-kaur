@@ -22,7 +22,7 @@ class PegawaiWebController extends Controller
         $data = [
             'title'     => 'Data PNS',
             'id_page'   => 'pegawai-index',
-            'pegawai'   => User::all(),
+            'pegawai'   => User::where('role', 'pegawai')->get(),
         ];
 
         return view('components.dash.pegawai.index', $data);
