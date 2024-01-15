@@ -15,7 +15,7 @@ class PegawaiWebController extends Controller
 
     public function __construct()
     {
-        $this->dataPegawai = User::where('role', 'pegawai')->get();
+        $this->dataPegawai = User::where('role', 'pegawai');
     }
 
     public function showPegawai(): View
@@ -23,7 +23,7 @@ class PegawaiWebController extends Controller
         $data = [
             'title'     => 'Data PNS',
             'id_page'   => 'pegawai-index',
-            'pegawai'   => $this->dataPegawai,
+            'pegawai'   => $this->dataPegawai->get(),
         ];
 
         return view('components.dash.pegawai.index', $data);
@@ -32,29 +32,42 @@ class PegawaiWebController extends Controller
     public function searchPegawai(Request $request)
     {
         $table = new User();
-        $field = 'nama';
+        $field = 'nip';
         $searchKey = $request->input('key');
         $this->dataPegawai = SearchData::find($table, $searchKey, $field);
         return $this->showPegawai();
     }
 
-    public function handleTambahPegawai(Request $request)
+    public function fieldUser($request)
     {
-        try {
-            User::create([
-                'nip'           => $request->input('nip'),
-                'nama'          => $request->input('nama'),
-                'pangkat_id'    => $request->input('pangkat_id'),
-                'golongan_id'   => $request->input('golongan_id'),
-                'jabatan_id'    => $request->input('jabatan_id'),
-                'no_telepon'    => $request->input('no_telepon'),
-                'role'          => 'pegawai',
-                'password'      => Hash::make($request->input('password')),
-            ]);
+        $pegawai = [
+            'nip'           => $request->input('nip'),
+            'nama'          => $request->input('nama'),
+            'pangkat_id'    => $request->input('pangkat_id'),
+            'golongan_id'   => $request->input('golongan_id'),
+            'jabatan_id'    => $request->input('jabatan_id'),
+            'no_telepon'    => $request->input('no_telepon'),
+            'role'          => $request->input('role'),
+            'password'      => Hash::make($request->input('password')),
+        ];
 
-            return back();
-        } catch (\JsonException $e) {
-            return back();
-        }
+        return $pegawai;
+    }
+
+    public function handleCreatePegawai(Request $request)
+    {
+        User::create([$this->fieldUser($request)]);
+        return back();
+    }
+
+    public function handleUpdatePegawai(Request $request, $user_id)
+    {
+        $this->dataPegawai = $this->dataPegawai->where('user_id', $user_id)->first();
+
+        $userData = $this->fieldUser($request);
+
+        User::where('id', $user_id)->update($userData);
+
+        return back();
     }
 }

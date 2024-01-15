@@ -16,6 +16,11 @@ Route::get('/data-dinas', [PermintaanWebController::class, 'showDataDinas'])->na
 Route::get('/data-cuti', [PermintaanWebController::class, 'showDataCuti'])->name('data-cuti');
 Route::get('/data-pelanggaran', [PelanggaranWebController::class, 'showPelanggaran'])->name('data-pelanggaran');
 Route::get('/data-pegawai', [PegawaiWebController::class, 'showPegawai'])->name('data-pegawai');
+
+Route::post('/create-pegawai', [PegawaiWebController::class, 'handleCreatePegawai'])->name('create-pegawai');
+Route::post('/update-pegawai', [PegawaiWebController::class, 'handleUpdatePegawai'])->name('update-pegawai');
+Route::post('/delete-pegawai', [PegawaiWebController::class, 'handleDeletePegawai'])->name('delete-pegawai');
+
 Route::prefix('/cari')->group(function () {
     Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');
 });

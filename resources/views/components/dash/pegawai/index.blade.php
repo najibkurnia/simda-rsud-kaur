@@ -8,10 +8,16 @@
                     <h4>{{ $title }}</h4>          
                     
                     <form method="GET" action="{{ route('cari-pegawai') }}" class="d-flex col-4">
-                        <input type="text" name="key" class="form-control me-0 me-lg-2" placeholder="Cari data" id="key">
+                        <input type="text" name="key" class="form-control me-0 me-lg-2" placeholder="Cari NIP" id="key">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
                 </div>
+
+
+                <form method="POST" action="{{ route('create-pegawai') }}" class="d-flex col-4">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary">Create</button>
+                </form>
 
                 <div class="table-responsive my-4 col-12">
                     <table class="table table-striped">
