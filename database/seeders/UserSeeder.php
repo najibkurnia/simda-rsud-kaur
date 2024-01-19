@@ -16,14 +16,26 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'nip'           => '2112131',
-                'nama'          => 'Neville Jeremy',
+                'nip'           => '12345',
+                'nama'          => 'Vinsensius Pokuji Hermansyah',
                 'pangkat_id'    => 1,
                 'golongan_id'   => 1,
                 'jabatan_id'    => 1,
                 'no_telepon'    => '08237319212',
                 'role'          => 'pegawai',
-                'password'      => Hash::make('neville123')
+                'alamat'        => 'Jl. Kasihan, Daerah Istimewa Yogyakarta',
+                'password'      => Hash::make('pokuji')
+            ],
+            [
+                'nip'           => '54321',
+                'nama'          => 'Markus Paul Anjur',
+                'pangkat_id'    => 1,
+                'golongan_id'   => 1,
+                'jabatan_id'    => 1,
+                'no_telepon'    => '08525682192',
+                'role'          => 'pegawai',
+                'alamat'        => 'Jl. Satria, Sumatera Utara',
+                'password'      => Hash::make('markus')
             ]
         ]);
     }

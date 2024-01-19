@@ -61,22 +61,33 @@ class AuthenticationApiController extends Controller
 
     public function login(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'nip'           => 'required',
+            'password'      => 'required'
+        ]);
 
-        if (!Auth::attempt($request->only('nip', 'password'))) {
+        if ($validator->fails()) {
             return response()->json([
-                'message'  => 'Gagal untuk login'
-            ], 401);
+                'message' => 'NIP & Password tidak boleh kosong!'
+            ], 400);
         }
 
-        $user = User::where('nip', $request->input('nip'))->firstOrFail();
+        if (Auth::attempt($request->only('nip', 'password'))) {
+            $user = User::where('nip', $request->input('nip'))->firstOrFail();
 
-        $token = $this->getToken($user);
+            $token = $this->getToken($user);
+
+            return response()->json([
+                'message'       =>  'Berhasil login',
+                'token'         => $token,
+                'token_type'    => 'Bearer',
+                'data'          => $user
+            ], 200);
+        }
 
         return response()->json([
-            'message'       =>  'Berhasil login',
-            'access_token'  => $token,
-            'token_type'    => 'Bearer'
-        ], 200);
+            'message'  => 'Maaf, Akun tidak ditemukan'
+        ], 401);
     }
 
     public function logout(): JsonResponse
@@ -84,7 +95,7 @@ class AuthenticationApiController extends Controller
         Auth::logout();
         $this->getToken(null);
         return response()->json([
-            'message'   => 'Berhasil logout'
+            'message'   => 'Anda telah keluar dari sesi!'
         ], 200);
     }
 }

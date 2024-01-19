@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreignId('golongan_id')->nullable()->constrained('golongan', 'golongan_id')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('jabatan_id')->nullable()->constrained('jabatan', 'jabatan_id')->nullOnDelete()->cascadeOnUpdate();
             $table->string('no_telepon');
-            $table->string('password');
             $table->enum('role', ['pegawai', 'admin'])->default('pegawai');
+            $table->string('alamat');
+            $table->string('password');
             $table->timestamps();
         });
     }

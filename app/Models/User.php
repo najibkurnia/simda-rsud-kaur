@@ -26,6 +26,7 @@ class User extends Authenticatable
         'jabatan_id',
         'no_telepon',
         'role',
+        'alamat',
         'password'
     ];
     protected $primaryKey = 'user_id';
