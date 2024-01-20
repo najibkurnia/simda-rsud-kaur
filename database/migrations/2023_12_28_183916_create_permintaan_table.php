@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('permintaan', function (Blueprint $table) {
             $table->id('permintaan_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->enum('jenis_permintaan', ['dinas', 'izin', 'cuti']);
-            $table->string('keperluan')->nullable();
+            $table->string('keperluan');
             $table->string('tanggal_awal');
             $table->string('tanggal_akhir');
+            $table->string('bukti')->nullable();
             $table->string('keterangan')->nullable();
-            $table->string('surat_dinas')->nullable();
-            $table->string('bukti_izin')->nullable();
-            $table->boolean('status');
+            $table->enum('status', ['accepted', 'rejected'])->nullable()->default(null);
             $table->timestamps();
         });
     }
