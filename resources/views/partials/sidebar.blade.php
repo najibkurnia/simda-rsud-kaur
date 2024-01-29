@@ -24,5 +24,11 @@
         <a href="{{ route('data-pegawai') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pegawai-index' ? 'active' : null }}" style="border: 1px solid #aaa">
             <span class="text-dark">Data PNS</span>
         </a>
+        <a href="{{ route('data-pegawai') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pegawai-index' ? 'active' : null }}" style="border: 1px solid #aaa">
+            <span class="text-dark">Data Akun</span>
+        </a>
+        <a href="{{ route('data-pegawai') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pegawai-index' ? 'active' : null }}" style="border: 1px solid #aaa">
+            <span class="text-dark">Pengaturan</span>
+        </a>
     </div>
 </div>

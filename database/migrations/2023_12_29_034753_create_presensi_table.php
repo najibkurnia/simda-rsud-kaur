@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('tanggal_presensi');
             $table->time('jam_masuk')->nullable();
             $table->time('jam_pulang')->nullable();
-            $table->timestamps();
+            $table->enum('status', ['Telat', 'Tepat Waktu'])->nullable()->default(null);
+            $table->string('bukti_masuk')->nullable();
+            $table->string('bukti_pulang')->nullable();
+            $table->time('total_waktu')->nullable();
         });
     }
 
