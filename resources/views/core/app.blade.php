@@ -10,6 +10,12 @@
     <title>{{ $title }} | RSUD KAUR</title>
 </head>
 <body>
+    @if ($id_page == 'auth-index')
+    
+    @yield('components')
+        
+    @else 
+    
     <div class="container-fluid">
         @include('partials.header')
         
@@ -20,6 +26,8 @@
             </div>
         </div>
     </div>
+
+    @endif
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

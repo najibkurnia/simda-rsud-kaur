@@ -36,6 +36,17 @@ class UserSeeder extends Seeder
                 'role'          => 'pegawai',
                 'alamat'        => 'Jl. Satria, Sumatera Utara',
                 'password'      => Hash::make('markus')
+            ],
+            [
+                'nip'           => '220905',
+                'nama'          => 'Neville Jeremy',
+                'pangkat_id'    => 1,
+                'golongan_id'   => 1,
+                'jabatan_id'    => 1,
+                'no_telepon'    => '08215682192',
+                'role'          => 'admin',
+                'alamat'        => 'Jl. Pipa, Lampung',
+                'password'      => Hash::make('123admin456')
             ]
         ]);
     }

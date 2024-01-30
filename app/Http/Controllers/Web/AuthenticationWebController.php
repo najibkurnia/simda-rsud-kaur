@@ -26,10 +26,14 @@ class AuthenticationWebController extends Controller
             'password'  => 'required'
         ]);
 
-        if (Auth::attempt($credentials, ['role' => 'admin'])) {
-            return redirect()->route('presensi');
+        if (Auth::attempt($credentials)) {
+            if (Auth::user()->role == 'admin') {
+                return redirect()->route('presensi');
+            } else {
+                return back()->with('error', 'Maaf, anda tidak dapat mengakses halaman ini karena anda bukan admin.')->withInput();
+            }
         }
 
-        return back()->with('error', 'Maaf, akun anda tidak ditemukan!');
+        return back()->with('error', 'Maaf, akun anda tidak ditemukan.')->withInput();
     }
 }
