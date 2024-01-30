@@ -19,46 +19,6 @@ class AuthenticationApiController extends Controller
         return $token;
     }
 
-    public function register(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'nip'           => 'required',
-            'nama'          => 'required',
-            'pangkat_id'    => 'required',
-            'golongan_id'   => 'required',
-            'jabatan_id'    => 'required',
-            'no_telepon'    => 'required',
-            'role'          => 'required',
-            'password'      => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Ada kesalahan dalam penginputan'
-            ], 400);
-        }
-
-        $user = User::create([
-            'nip'           => $request->input('nip'),
-            'nama'          => $request->input('nama'),
-            'pangkat_id'    => $request->input('pangkat_id'),
-            'golongan_id'   => $request->input('golongan_id'),
-            'jabatan_id'    => $request->input('jabatan_id'),
-            'no_telepon'    => $request->input('no_telepon'),
-            'role'          => $request->input('required'),
-            'password'      => Hash::make($request->input('password'))
-        ]);
-
-        $token = $this->getToken($user);
-
-        return response()->json([
-            'data'          => $user,
-            'message'       => 'Berhasil mendaftarkan pengguna',
-            'access_token'  => $token,
-            'token_type'    => 'Bearer',
-        ], 201);
-    }
-
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -73,16 +33,22 @@ class AuthenticationApiController extends Controller
         }
 
         if (Auth::attempt($request->only('nip', 'password'))) {
-            $user = User::where('nip', $request->input('nip'))->firstOrFail();
+            if (Auth::user()->role == 'pegawai') {
+                $user = User::where('nip', $request->input('nip'))->firstOrFail();
 
-            $token = $this->getToken($user);
+                $token = $this->getToken($user);
 
-            return response()->json([
-                'message'       =>  'Berhasil login',
-                'token'         => $token,
-                'token_type'    => 'Bearer',
-                'data'          => $user
-            ], 200);
+                return response()->json([
+                    'message'       =>  'Berhasil login',
+                    'token'         => $token,
+                    'token_type'    => 'Bearer',
+                    'data'          => $user
+                ], 200);
+            } else {
+                return response()->json([
+                    'message'       => 'Maaf, akun admin tidak ada akses di aplikasi mobile. Silakan login di web.'
+                ], 401);
+            }
         }
 
         return response()->json([
