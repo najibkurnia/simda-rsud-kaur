@@ -36,7 +36,7 @@
                             <td>0</td>
                             <td>100</td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                                <button class="btn bg-primer">Detail</button>
                             </td>
                         </tr>
                     </tbody>

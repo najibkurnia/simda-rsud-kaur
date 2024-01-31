@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/create-pegawai', [PegawaiWebController::class, 'handleCreatePegawai'])->name('create-pegawai');
     Route::put('/update-pegawai/{user_id}', [PegawaiWebController::class, 'handleUpdatePegawai'])->name('update-pegawai');
     Route::delete('/delete-pegawai/{user_id}', [PegawaiWebController::class, 'handleDeletePegawai'])->name('delete-pegawai');
+    Route::post('/export-pdf', [PegawaiWebController::class, 'handleExportPdf'])->name('export-pdf');
 
     Route::prefix('/cari')->group(function () {
         Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');

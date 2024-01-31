@@ -44,8 +44,8 @@
                                 <td>{{ $pg->no_telepon }}</td>
                                 <td>{{ $pg->alamat }}</td>
                                 <td style="white-space: nowrap">
-                                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="{{ '#update'.$pg->user_id }}">Edit</button>
-                                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="{{'#delete'.$pg->user_id}}">Hapus</button>
+                                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="{{ '#update'.$pg->user_id }}">Edit</button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="{{'#delete'.$pg->user_id}}">Hapus</button>
                                 </td>
                             </tr>
                             
@@ -195,7 +195,10 @@
                         </div>
                     </div>
                     
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#create">Cetak PDF</button>
+                    <form action="{{ route('export-pdf') }}" method="POST">
+                    @csrf
+                    <button formtarget="_blank" type="submit" class="btn btn-secondary">Cetak PDF</button>
+                    </form>
                 </div>
             </div>
         </div>

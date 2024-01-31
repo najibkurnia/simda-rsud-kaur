@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utils\ExportData;
 use App\Http\Utils\SearchData;
 use App\Models\Golongan;
 use App\Models\Jabatan;
@@ -45,13 +46,13 @@ class PegawaiWebController extends Controller
 
     public function searchPegawai(Request $request)
     {
-        $attributes = [
+        $attr = [
             'model'     => $this->model['user'],
             'field'     => is_numeric($request->input('query')) ? 'nip' : 'nama',
             'key'       => $request->input('query')
         ];
 
-        $this->dataPegawai = SearchData::find($attributes)->where('role', 'pegawai')->paginate(10);
+        $this->dataPegawai = SearchData::find($attr)->where('role', 'pegawai')->paginate(10);
 
         return $this->showPegawai();
     }
@@ -112,5 +113,15 @@ class PegawaiWebController extends Controller
     {
         $this->model['user']->where('user_id', $user_id)->delete();
         return back()->with('warning', 'Akun pegawai telah dihapus');
+    }
+
+    public function handleExportPdf()
+    {
+        $attr = [
+            'heading'       => 'Rekap Data PNS',
+            'fileDir'       => 'pdf.pns',
+            'data'          => User::where('role', 'pegawai')->orderBy('user_id', 'DESC')->get(),
+        ];
+        return ExportData::PDF($attr);
     }
 }
