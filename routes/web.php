@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticationWebController::class, 'showLogin'])->name('login');
 Route::post('/handle-login', [AuthenticationWebController::class, 'handleLogin'])->name('handle-login');
+Route::post('/handle-logout', [AuthenticationWebController::class, 'handleLogout'])->name('handle-logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/presensi', [PresensiWebController::class, 'showPresensi'])->name('presensi');
@@ -21,8 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/data-pegawai', [PegawaiWebController::class, 'showPegawai'])->name('data-pegawai');
 
     Route::post('/create-pegawai', [PegawaiWebController::class, 'handleCreatePegawai'])->name('create-pegawai');
-    Route::put('/update-pegawai', [PegawaiWebController::class, 'handleUpdatePegawai'])->name('update-pegawai');
-    Route::delete('/delete-pegawai', [PegawaiWebController::class, 'handleDeletePegawai'])->name('delete-pegawai');
+    Route::put('/update-pegawai/{user_id}', [PegawaiWebController::class, 'handleUpdatePegawai'])->name('update-pegawai');
+    Route::delete('/delete-pegawai/{user_id}', [PegawaiWebController::class, 'handleDeletePegawai'])->name('delete-pegawai');
 
     Route::prefix('/cari')->group(function () {
         Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');

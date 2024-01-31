@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Request;
 
 class SearchData
 {
-    public static function find($table, $searchKey, $field)
+    public static function find(array $attributes)
     {
-        $query = $table->where($field, 'LIKE', "%" . $searchKey . "%");
-        $data = $query->get();
+        $query = $attributes['model']->where($attributes['field'], 'LIKE', '%' . $attributes['key'] . '%');
+        $data = $query;
 
         return $data;
     }

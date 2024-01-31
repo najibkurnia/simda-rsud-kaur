@@ -36,4 +36,10 @@ class AuthenticationWebController extends Controller
 
         return back()->with('error', 'Maaf, akun anda tidak ditemukan.')->withInput();
     }
+
+    public function handleLogout(): RedirectResponse
+    {
+        Auth::logout();
+        return redirect()->route('login')->with('info', 'Anda telah keluar dari sesi');
+    }
 }

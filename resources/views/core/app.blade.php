@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/public.css') }}">
     <title>{{ $title }} | RSUD KAUR</title>
+    <link rel="icon" href="{{ asset('img/logo.png') }}">
 </head>
 <body>
     @if ($id_page == 'auth-index')

@@ -4,12 +4,28 @@
     font-family: 'Ubuntu', sans-serif;
 }
 
+a {
+    color: #000;
+}
+
 .bg-primer {
-    background: #E3E3E3;
+    background: #0F56B3;
+    color: #fff;
+}
+
+.bg-card {
+    background-color: #ECF3FA;
+    border-color: #ECF3FA;
+    border-radius: 0;
+}
+
+.bg-td {
+    background: #fff;
 }
 
 .active {
-    background: #55555580;
+    background: #0F56B3;
+    color: #fff;
 }
 
 .border-primer {
@@ -25,4 +41,12 @@
 
 .fsmall {
     font-size: 13px;
+}
+
+.header {
+    background-color: #0F56B3;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px; 
+    z-index: 10;
+    width: 100%;
 }

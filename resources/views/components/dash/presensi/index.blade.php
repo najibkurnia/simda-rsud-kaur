@@ -2,7 +2,7 @@
 
 @section('components')
     <div class="col-12 mb-5">
-       <div class="card border-primer">
+       <div class="card bg-card">
         <div class="card-body">
             <strong>
                 <span>PRESENSI HARI INI</span>
@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
 
-                    <tbody style="vertical-align: middle">
+                    <tbody class="bg-td" style="vertical-align: middle">
                         <tr>
                             <td>144</td>
                             <td>100</td>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="col-12">
-        <div class="card border-primer">
+        <div class="card bg-card">
          <div class="card-body">
              <strong>
                 <span>RIWAYAT PRESENSI</span>
@@ -79,7 +79,7 @@
                          </tr>
                      </thead>
  
-                     <tbody style="vertical-align: middle">
+                     <tbody class="bg-td" style="vertical-align: middle">
                         @for($i=1; $i <= 5; $i++) 
                         <tr>
                             <td>18-Feb-2023</td>

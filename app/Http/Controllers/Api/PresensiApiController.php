@@ -43,7 +43,7 @@ class PresensiApiController extends Controller
             $status = Carbon::parse($this->current_time)->gt($end_masuk) ? 'Telat' : 'Tepat Waktu';
 
             Presensi::create([
-                'user_id'           => $request->user_id,
+                'user_id'           => $request->input('user_id'),
                 'tanggal_presensi'  => $this->current_date,
                 'jam_masuk'         => $this->current_time,
                 'status'            => $status,

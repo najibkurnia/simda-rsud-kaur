@@ -17,13 +17,13 @@ class PermintaanApiController extends Controller
         Storage::putFileAs('public/permintaan', $proofRequest, $proofClient);
 
         $permintaan = Permintaan::create([
-            'user_id'           => $request->user_id,
-            'keperluan'         => $request->keperluan,
-            'tanggal_awal'      => $request->tanggal_awal,
-            'tanggal_akhir'     => $request->tanggal_akhir,
+            'user_id'           => $request->input('user_id'),
+            'keperluan'         => $request->input('keperluan'),
+            'tanggal_awal'      => $request->input('tanggal_awal'),
+            'tanggal_akhir'     => $request->input('tanggal_akhir'),
             'bukti'             => $proofClient,
-            'keterangan'        => $request->keterangan,
-            'status'            => $request->status
+            'keterangan'        => $request->input('keterangan'),
+            'status'            => $request->input('status')
         ]);
         return response()->json([
             'data'      => $permintaan,
