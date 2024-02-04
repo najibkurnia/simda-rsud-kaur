@@ -8,12 +8,12 @@
                 <span>PRESENSI HARI INI</span>
             </strong>
             <div class="my-3">
-                <button class="btn btn-secondary">Presensi</button>
+                <div class="p-2 bg-primer rounded d-inline">Presensi</div>
             </div>
             
             <div class="table-responsive my-3">
                 <table class="table" style="white-space: nowrap; border: 1px solid #aaa">
-                    <thead class="bg-secondary text-light">
+                    <thead class="bg-th">
                         <tr>
                             <th>Pegawai</th>
                             <th>Masuk</th>
@@ -69,13 +69,13 @@
                     @if (request()->routeIs('cari-rekap-riwayat'))
                     <a href="{{ route('presensi') }}" class="btn border border-secondary rounded-0">Back</a>
                     @endif
-                    <button class="btn btn-secondary">Search</button>
+                    <button class="btn bg-search">Search</button>
                 </form>
             </div>
             
             <div class="table-responsive">
                 <table class="table table-striped" style="white-space: nowrap; border: 1px solid #aaa">
-                    <thead class="bg-secondary text-light">
+                    <thead class="bg-th">
                         <tr>
                             <th>Tanggal</th>
                             <th>Pegawai</th>
@@ -103,7 +103,7 @@
                             <td>{{ $rp->jumlah_cuti }}</td>
                             <td>{{ $rp->jumlah_riwayat }}</td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                                <button class="btn bg-primer">Detail</button>
                             </td>
                         </tr>
                         @endforeach

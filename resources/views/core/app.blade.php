@@ -23,7 +23,7 @@
         
         <div class="row justify-content-between">  
             @include('partials.sidebar')    
-            <div class="col-10" style="height: 100vh; padding-top: 120px; padding-bottom: 40px; overflow-y: auto">    
+            <div class="col-10" style="height: 100vh; padding-top: 120px; padding-bottom: 40px; overflow-y: auto; background-color: #e8eff9">    
                 @yield('components')
             </div>
         </div>

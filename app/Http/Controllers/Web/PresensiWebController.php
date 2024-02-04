@@ -74,10 +74,15 @@ class PresensiWebController extends Controller
     public function searchPreviousRecap(Request $request)
     {
         date_default_timezone_set('Asia/Jakarta');
-        $searchDate = $request->input('query');
-        $this->optFilterDate = '=';
+        $searchDate = date('d-m-Y', strtotime($request->input('query')));
 
-        $this->filterDate = Carbon::parse($searchDate)->format('d-m-Y');
+        if ($searchDate != $this->current_date) {
+            $this->optFilterDate = '=';
+
+            $this->filterDate = $searchDate;
+        }
+
+
         return $this->showPresensi();
     }
 

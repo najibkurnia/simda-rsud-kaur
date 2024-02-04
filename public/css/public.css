@@ -8,7 +8,7 @@ a {
     color: #000;
 }
 
-.bg-thead {
+.bg-th {
     background: #000;
     color: #fff;
 }
@@ -18,14 +18,24 @@ a {
     color: #fff;
 }
 
+.bg-body {
+    background: #e8eff9;
+}
+
+.bg-search {
+    background: #FF9F43;
+    color: #fff;
+}
+
 .bg-card {
-    background-color: #ECF3FA;
-    border-color: #ECF3FA;
-    border-radius: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 0;
 }
 
 .bg-td {
     background: #fff;
+    border: 1px solid #000;
 }
 
 .active {
@@ -41,7 +51,6 @@ a {
 .menu-sidebar {
     text-decoration: none;
     display: inline-block;
-    
 }
 
 .fsmall {
