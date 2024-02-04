@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('bukti')->nullable();
             $table->string('keterangan')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->nullable()->default('pending');
-            $table->timestamps();
+            $table->string('tanggal_permintaan');
         });
     }
 

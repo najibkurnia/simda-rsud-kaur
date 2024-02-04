@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Permintaan extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table = 'permintaan';
     protected $primaryKey = 'permintaan_id';
     protected $fillable = [
@@ -17,6 +18,7 @@ class Permintaan extends Model
         'tanggal_akhir',
         'bukti',
         'keterangan',
-        'status'
+        'status',
+        'tanggal_permintaan'
     ];
 }

@@ -20,6 +20,7 @@
                             <th>Pulang</th>
                             <th>Dinas</th>
                             <th>Izin</th>
+                            <th>Sakit</th>
                             <th>Cuti</th>
                             <th>Total</th>
                             <th>Action</th>
@@ -27,20 +28,29 @@
                     </thead>
 
                     <tbody class="bg-td" style="vertical-align: middle">
+                        @foreach ($nowRecap as $now)
                         <tr>
-                            <td>144</td>
-                            <td>100</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>100</td>
+                            <td>{{ $ttl_pegawai }}</td>
+                            <td>{{ $now->jumlah_jam_masuk }}</td>
+                            <td>{{ $now->jumlah_jam_pulang }}</td>
+                            <td>{{ $now->jumlah_dinas }}</td>
+                            <td>{{ $now->jumlah_izin }}</td>
+                            <td>{{ $now->jumlah_sakit }}</td>
+                            <td>{{ $now->jumlah_cuti }}</td>
+                            <td>{{ ($now->total_presensi + $now->total_permintaan) }}</td>
                             <td>
                                 <button class="btn bg-primer">Detail</button>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
+
                 </table>
+
+                
+                @if ($nowRecap->isEmpty())
+                    <p class="text-secondary">Data presensi dan permintaan belum ada hari ini!</p>
+                @endif
             </div>
         </div>
        </div>
@@ -73,6 +83,7 @@
                              <th>Pulang</th>
                              <th>Dinas</th>
                              <th>Izin</th>
+                             <th>Sakit</th>
                              <th>Cuti</th>
                              <th>Total</th>
                              <th>Detail</th>
@@ -80,21 +91,22 @@
                      </thead>
  
                      <tbody class="bg-td" style="vertical-align: middle">
-                        @for($i=1; $i <= 5; $i++) 
+                        @foreach($previousRecap as $prev) 
                         <tr>
-                            <td>18-Feb-2023</td>
-                            <td>144</td>
-                            <td>100</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>100</td>
+                            <td>{{ $prev->tanggal_presensi }}</td>
+                            <td>{{ $ttl_pegawai }}</td>
+                            <td>{{ $prev->jumlah_jam_masuk }}</td>
+                            <td>{{ $prev->jumlah_jam_pulang }}</td>
+                            <td>{{ $prev->jumlah_dinas }}</td>
+                            <td>{{ $prev->jumlah_izin }}</td>
+                            <td>{{ $prev->jumlah_sakit }}</td>
+                            <td>{{ $prev->jumlah_cuti }}</td>
+                            <td>{{ ($prev->total_presensi + $prev->total_permintaan) }}</td>
                             <td>
                                 <button class="btn btn-secondary">Detail</button>
                             </td>
                         </tr>
-                        @endfor
+                        @endforeach
                      </tbody>
                  </table>
              </div>
