@@ -38,6 +38,11 @@ a {
     border: 1px solid #000;
 }
 
+.bg-back {
+    background-color: #00D082;
+    color: #fff;
+}
+
 .active {
     background: #0F56B3;
     color: #fff;

@@ -195,7 +195,7 @@
                         </div>
                     </div>
                     
-                    <form action="{{ route('export-pdf') }}" method="POST">
+                    <form action="{{ route('export-pdf-pegawai') }}" method="POST">
                     @csrf
                     <button formtarget="_blank" type="submit" class="btn btn-secondary">Cetak PDF</button>
                     </form>

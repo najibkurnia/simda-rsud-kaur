@@ -14,10 +14,15 @@ class Riwayat extends Model
     protected $table = 'riwayat';
     protected $fillable = [
         'tanggal_riwayat',
+        'user_id',
         'presensi_id',
         'permintaan_id'
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     public function presensi(): BelongsTo
     {
         return $this->belongsTo(Presensi::class, 'presensi_id');

@@ -35,6 +35,7 @@ class PermintaanApiController extends Controller
 
         Riwayat::create([
             'tanggal_riwayat'   => $current_date,
+            'user_id'           => $request->input('user_id'),
             'permintaan_id'     => $permintaan->permintaan_id
         ]);
 

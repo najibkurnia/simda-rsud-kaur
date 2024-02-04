@@ -2,66 +2,72 @@
 
 @section('components')
 <div class="col-12">
+    <a href="{{ route('presensi') }}" class="btn mb-3 bg-back">Kembali</a>
+    
     <div class="card bg-card">
         <div class="card-body">
-            <strong>
-                <span>RIWAYAT PRESENSI</span>
-            </strong>
-            
             <div class="row my-3 justify-content-end">
-                <form action="{{ route('cari-rekap-riwayat') }}" class="col-4 d-flex align-items-center" style="gap: 10px">
-                    <input type="date" name="query" class="form-control">
-                    @if (request()->routeIs('cari-rekap-riwayat'))
-                    <a href="{{ route('presensi') }}" class="btn border border-secondary rounded-0">Back</a>
+                <form action="{{ route('cari-rekap-riwayat-pegawai', $tanggal_riwayat) }}" class="col-4 d-flex align-items-center" style="gap: 10px">
+                    <input type="text" name="query" class="form-control" required placeholder="Cari nama pegawai">
+                    @if (request()->routeIs('cari-rekap-riwayat-pegawai'))
+                    <a href="{{ route('detail-presensi', $tanggal_riwayat) }}" class="btn border border-secondary rounded-0">Back</a>
                     @endif
-                    <button class="btn btn-secondary">Search</button>
+                    <button class="btn bg-search">Search</button>
                 </form>
             </div>
             
             <div class="table-responsive">
                 <table class="table table-striped" style="white-space: nowrap; border: 1px solid #aaa">
-                    <thead class="bg-secondary text-light">
+                    <thead class="bg-th">
                         <tr>
-                            <th>Tanggal</th>
-                            <th>Pegawai</th>
-                            <th>Masuk</th>
-                            <th>Pulang</th>
-                            <th>Dinas</th>
-                            <th>Izin</th>
-                            <th>Sakit</th>
-                            <th>Cuti</th>
-                            <th>Total</th>
-                            <th>Detail</th>
+                            <th>NIP</th>
+                            <th>Nama</th>
+                            <th>Pangkat</th>
+                            <th>Jabatan</th>
+                            <th>Keterangan</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     
                     <tbody class="bg-td" style="vertical-align: middle">
-                        {{-- @foreach($riwayatPrev as $rp) 
+                        @foreach ($riwayatUser as $riwayat)
                         <tr>
-                            <td>{{ $rp->tanggal_riwayat }}</td>
-                            <td>{{ $ttl_pegawai }}</td>
-                            <td>{{ $rp->jumlah_jam_masuk }}</td>
-                            <td>{{ $rp->jumlah_jam_pulang }}</td>
-                            <td>{{ $rp->jumlah_dinas }}</td>
-                            <td>{{ $rp->jumlah_izin }}</td>
-                            <td>{{ $rp->jumlah_sakit }}</td>
-                            <td>{{ $rp->jumlah_cuti }}</td>
-                            <td>{{ $rp->jumlah_riwayat }}</td>
+                            <td>{{ $riwayat->user->nip }}</td>
+                            <td>{{ $riwayat->user->nama }}</td>
+                            <td>{{ $riwayat->user->pangkat->nama_pangkat }}</td>
+                            <td>{{ $riwayat->user->jabatan->nama_jabatan }}</td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                                @if ($riwayat->presensi != null)
+                                    @if ($riwayat->presensi->jam_masuk != null)
+                                        <span>Masuk - {{ $riwayat->presensi->jam_masuk }}</span>
+                                    @else    
+                                        <span>Pulang - {{ $riwayat->presensi->jam_pulang }}</span>
+                                    @endif
+                                @else 
+                                    <span>{{ $riwayat->permintaan->keperluan }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{ $riwayat->presensi != null ? route('rincian-presensi', [$riwayat->user_id, $riwayat->tanggal_riwayat]) : route('rincian-permintaan', [$riwayat->user_id, $riwayat->tanggal_riwayat]) }}" class="btn bg-primer">Detail</a>
+
                             </td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 
-                {{-- <div class="d-flex mb-2 justify-content-between">
-                    @if (!$riwayatPrev->isEmpty())
+                <div class="d-flex mb-2 justify-content-between">
+                    @if (!$riwayatUser->isEmpty())
                     
-                    <p class="border border-dark px-2">Showing {{ $riwayatPrev->firstItem() }} to {{ $riwayatPrev->lastItem() }} of {{ $riwayatPrev->total() }} entries</p>
-                    {{ $riwayatPrev->links() }}
+                    <p class="border border-dark px-2">Showing {{ $riwayatUser->firstItem() }} to {{ $riwayatUser->lastItem() }} of {{ $riwayatUser->total() }} entries</p>
+                    {{ $riwayatUser->links() }}
                     @endif
-                </div> --}}
+                    <form action="{{ route('export-pdf-rekap-pegawai', $tanggal_riwayat) }}" method="POST">
+                        @csrf
+                        <button formtarget="_blank" type="submit" class="btn btn-info text-light">Cetak PDF</button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>

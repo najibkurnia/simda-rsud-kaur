@@ -57,6 +57,7 @@ class PresensiApiController extends Controller
 
             Riwayat::create([
                 'tanggal_riwayat'   => $this->current_date,
+                'user_id'           => $request->input('user_id'),
                 'presensi_id'       => $presensi->presensi_id,
             ]);
 
@@ -99,6 +100,7 @@ class PresensiApiController extends Controller
 
             Riwayat::create([
                 'tanggal_riwayat'   => $this->current_date,
+                'user_id'           => $user_id,
                 'presensi_id'       => $presensi->presensi_id
             ]);
 

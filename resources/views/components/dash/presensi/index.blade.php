@@ -39,7 +39,7 @@
                             <td>{{ $rn->jumlah_cuti }}</td>
                             <td>{{ $rn->jumlah_riwayat }}</td>
                             <td>
-                                <button class="btn bg-primer">Detail</button>
+                                <a href="{{ route('detail-presensi', $rn->tanggal_riwayat) }}" class="btn bg-primer">Detail</a>
                             </td>
                         </tr>
                         @endforeach
@@ -65,7 +65,7 @@
             
             <div class="row my-3 justify-content-end">
                 <form action="{{ route('cari-rekap-riwayat') }}" class="col-4 d-flex align-items-center" style="gap: 10px">
-                    <input type="date" name="query" class="form-control">
+                    <input type="date" name="query" required class="form-control">
                     @if (request()->routeIs('cari-rekap-riwayat'))
                     <a href="{{ route('presensi') }}" class="btn border border-secondary rounded-0">Back</a>
                     @endif
@@ -103,7 +103,7 @@
                             <td>{{ $rp->jumlah_cuti }}</td>
                             <td>{{ $rp->jumlah_riwayat }}</td>
                             <td>
-                                <button class="btn bg-primer">Detail</button>
+                                <a href="{{ route('detail-presensi', $rp->riwayat_id) }}" class="btn bg-primer">Detail</a>
                             </td>
                         </tr>
                         @endforeach

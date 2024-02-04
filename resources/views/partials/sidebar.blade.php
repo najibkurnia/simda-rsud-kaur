@@ -1,6 +1,6 @@
 <div class="col-2 px-0" style="height: 100vh;">
     <div class="p-0" style="position: relative; top: 120px">
-        <a href="{{ route('presensi') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'presensi-index' ? 'active' : null }}">
+        <a href="{{ route('presensi') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'presensi' ? 'active' : null }}">
             Presensi
         </a>
         <a href="{{ route('rekap-presensi') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'presensi-rekap' ? 'active' : null }}">
