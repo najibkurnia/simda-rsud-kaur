@@ -28,5 +28,6 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('/cari')->group(function () {
         Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');
+        Route::get('/rekap-riwayat', [PresensiWebController::class, 'searchPreviousRecap'])->name('cari-rekap-riwayat');
     });
 });

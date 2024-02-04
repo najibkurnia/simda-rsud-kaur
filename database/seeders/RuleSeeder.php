@@ -15,8 +15,8 @@ class RuleSeeder extends Seeder
     {
         DB::table('rules')->insert([
             [
-                'start_masuk'     => '07:00:00',
-                'end_masuk'       => '08:30:00',
+                'start_masuk'     => '00:00:00',
+                'end_masuk'       => '01:30:00',
                 'start_pulang'    => '16:00:00',
                 'longitude'       => '110.4202346',
                 'latitude'        => '-7.7533145',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Utils\Rules;
 use App\Models\Presensi;
+use App\Models\Riwayat;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,29 +26,38 @@ class PresensiApiController extends Controller
 
     public function handlePresensiMasuk(Request $request): JsonResponse
     {
-        if (!in_array(request()->ip_address, $this->allowedIpAddress)) {
-            return response()->json([
-                'message'   => 'Pastikan anda terhubung dengan internet kantor'
-            ], 403);
-        }
+        // if (!in_array(request()->ip_address, $this->allowedIpAddress)) {
+        //     return response()->json([
+        //         'message'   => 'Pastikan anda terhubung dengan internet kantor'
+        //     ], 403);
+        // }
+
+        date_default_timezone_set('Asia/Jakarta');
 
         $proofRequest = $request->file('bukti_masuk');
         $proofMasuk = time() . '_' . $proofRequest->getClientOriginalName();
         Storage::putFileAs('public/presensi', $proofRequest, $proofMasuk);
 
-        $start_masuk = Carbon::parse(Rules::use('start_masuk'));
-        $end_masuk = Carbon::parse(Rules::use('end_masuk'));
-        $start_pulang = Carbon::parse(Rules::use('start_pulang'));
+        $start_masuk = Rules::use('start_masuk');
+        $end_masuk = Rules::use('end_masuk');
+        $start_pulang = Rules::use('start_pulang');
 
-        if (Carbon::parse($this->current_time)->gte($start_masuk) && Carbon::parse($this->current_time)->lt($start_pulang)) {
-            $status = Carbon::parse($this->current_time)->gt($end_masuk) ? 'Telat' : 'Tepat Waktu';
+        if ($this->current_time >= $start_masuk && $this->current_time < $start_pulang) {
+            $status = $this->current_time > $end_masuk ? 'Telat' : 'Tepat Waktu';
 
-            Presensi::create([
-                'user_id'           => $request->input('user_id'),
-                'tanggal_presensi'  => $this->current_date,
-                'jam_masuk'         => $this->current_time,
-                'status'            => $status,
-                'bukti_masuk'       => $proofMasuk,
+            $presensi = new Presensi();
+
+            $presensi->user_id = $request->input('user_id');
+            $presensi->tanggal_presensi = $this->current_date;
+            $presensi->jam_masuk = $this->current_time;
+            $presensi->status = $status;
+            $presensi->bukti_masuk = $proofMasuk;
+
+            $presensi->save();
+
+            Riwayat::create([
+                'tanggal_riwayat'   => $this->current_date,
+                'presensi_id'       => $presensi->presensi_id,
             ]);
 
             return response()->json([
@@ -56,21 +66,21 @@ class PresensiApiController extends Controller
         }
 
         return response()->json([
-            'message'       => 'Waktu presensi masuk tidak dapat diakses untuk sekarang. karena waktu menunjukkan jam ' . $this->current_time
+            'message'       => 'Waktu presensi masuk tidak dapat diakses untuk sekarang. karena waktu menunjukkan jam ' . $this->current_time,
         ], 403);
     }
 
     public function handlePresensiPulang(Request $request, $user_id): JsonResponse
     {
-        if (!in_array(request()->ip_address, $this->allowedIpAddress)) {
-            return response()->json([
-                'message'   => 'Pastikan anda terhubung dengan internet kantor'
-            ], 403);
-        }
+        // if (!in_array(request()->ip_address, $this->allowedIpAddress)) {
+        //     return response()->json([
+        //         'message'   => 'Pastikan anda terhubung dengan internet kantor'
+        //     ], 403);
+        // }
 
         $presensi = Presensi::where('user_id', $user_id)->where('tanggal_presensi', $this->current_date)->first();
 
-        $start_pulang = Carbon::parse(Rules::use('start_pulang'));
+        $start_pulang = Rules::use('start_pulang');
         $masuk = Carbon::parse($presensi->jam_masuk);
         $pulang = Carbon::parse($this->current_time);
         $diff_time = $masuk->diff($pulang);
@@ -79,11 +89,17 @@ class PresensiApiController extends Controller
         $proofPulang = time() . '_' . $proofRequest->getClientOriginalName();
         Storage::putFileAs('public/presensi', $proofRequest, $proofPulang);
 
-        if (Carbon::parse($this->current_time)->gte($start_pulang)) {
-            Presensi::where('user_id', $user_id)->where('tanggal_presensi', $this->current_date)->update([
-                'jam_pulang'        => $this->current_time,
-                'bukti_pulang'      => $proofPulang,
-                'total_waktu'       => $diff_time->h . ':' . $diff_time->i . ':' . $diff_time->s
+        if ($this->current_time >= $start_pulang) {
+            $presensi = Presensi::where('user_id', $user_id)->where('tanggal_presensi', $this->current_date)->first();
+            $presensi->jam_pulang = $this->current_time;
+            $presensi->bukti_pulang = $proofPulang;
+            $presensi->total_waktu = $diff_time->h . ':' . $diff_time->i . ':' . $diff_time->s;
+
+            $presensi->save();
+
+            Riwayat::create([
+                'tanggal_riwayat'   => $this->current_date,
+                'presensi_id'       => $presensi->presensi_id
             ]);
 
             return response()->json([

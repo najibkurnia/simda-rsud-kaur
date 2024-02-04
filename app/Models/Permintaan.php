@@ -19,6 +19,7 @@ class Permintaan extends Model
         'bukti',
         'keterangan',
         'status',
-        'tanggal_permintaan'
+        'tanggal_permintaan',
+        'surat_tugas',
     ];
 }

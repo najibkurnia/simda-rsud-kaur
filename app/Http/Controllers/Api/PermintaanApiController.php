@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permintaan;
+use App\Models\Riwayat;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,16 +20,24 @@ class PermintaanApiController extends Controller
         $proofClient = time() . '_' . $proofRequest->getClientOriginalName();
         Storage::putFileAs('public/permintaan', $proofRequest, $proofClient);
 
-        $permintaan = Permintaan::create([
-            'user_id'            => $request->input('user_id'),
-            'keperluan'          => $request->input('keperluan'),
-            'tanggal_awal'       => $request->input('tanggal_awal'),
-            'tanggal_akhir'      => $request->input('tanggal_akhir'),
-            'bukti'              => $proofClient,
-            'keterangan'         => $request->input('keterangan'),
-            'status'             => $request->input('status'),
-            'tanggal_permintaan' => $current_date
+        $permintaan = new Permintaan();
+
+        $permintaan->user_id = $request->input('user_id');
+        $permintaan->keperluan = $request->input('keperluan');
+        $permintaan->tanggal_awal = $request->input('tanggal_awal');
+        $permintaan->tanggal_akhir = $request->input('tanggal_akhir');
+        $permintaan->bukti = $proofClient;
+        $permintaan->keterangan = $request->input('keterangan');
+        $permintaan->status = 'pending';
+        $permintaan->tanggal_permintaan = $current_date;
+
+        $permintaan->save();
+
+        Riwayat::create([
+            'tanggal_riwayat'   => $current_date,
+            'permintaan_id'     => $permintaan->permintaan_id
         ]);
+
         return response()->json([
             'data'      => $permintaan,
             'message'   => 'Berhasil membuat permintaan ' . $request->keperluan,

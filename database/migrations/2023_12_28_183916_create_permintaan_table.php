@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('keterangan')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->nullable()->default('pending');
             $table->string('tanggal_permintaan');
+            $table->string('surat_tugas')->nullable();
         });
     }
 

@@ -21,6 +21,6 @@ Route::post('/logout', [AuthenticationApiController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/handle-presensi-masuk', [PresensiApiController::class, 'handlePresensiMasuk']);
-    Route::put('/handle-presensi-pulang', [PresensiApiController::class, 'handlePresensiPulang']);
+    Route::put('/handle-presensi-pulang/{user_id}', [PresensiApiController::class, 'handlePresensiPulang']);
     Route::post('/handle-permintaan', [PermintaanApiController::class, 'handlePermintaan']);
 });
