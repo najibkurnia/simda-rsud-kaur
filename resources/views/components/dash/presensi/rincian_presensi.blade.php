@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="row mt-5 justify-content-around align-items-center">
+            <div id="pulang" class="row mt-5 justify-content-around align-items-center">
                 <div class="col-4 p-0 border border-dark" style="height:50vh; width: 25vw">
                     <img src="{{ asset('storage/presensi/'.$presensi->bukti_pulang) }}" style="width: 100%; height: 100%; object-fit: cover;" alt="">
                 </div>

@@ -49,7 +49,6 @@
                             </td>
                             <td>
                                 <a href="{{ $riwayat->presensi != null ? route('rincian-presensi', [$riwayat->user_id, $riwayat->tanggal_riwayat]) : route('rincian-permintaan', [$riwayat->user_id, $riwayat->tanggal_riwayat]) }}" class="btn bg-primer">Detail</a>
-
                             </td>
                         </tr>
                         @endforeach
