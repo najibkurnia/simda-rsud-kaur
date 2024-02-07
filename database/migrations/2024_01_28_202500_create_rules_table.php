@@ -18,7 +18,7 @@ return new class extends Migration
             $table->time('start_pulang');
             $table->string('longitude');
             $table->string('latitude');
-            $table->enum('status', ['used', 'unused']);
+            $table->enum('status', ['used', 'unused'])->default('unused');
             $table->timestamps();
         });
     }

@@ -16,9 +16,9 @@ class Rules
     {
         $instance = new self();
         $data = [
-            'start_masuk' => "00:00:00",
-            'end_masuk' => "02:30:00",
-            'start_pulang' => "04:00:00",
+            'start_masuk' => "12:00:00",
+            'end_masuk' => "14:00:00",
+            'start_pulang' => "15:10:00",
             'longitude' => $instance->model->longitude,
             'latitude' => $instance->model->latitude,
         ];

@@ -15,13 +15,13 @@
                             <a href="{{ route('data-pegawai') }}" class="btn border border-secondary rounded-0">Back</a>
                             @endif
                         </div>
-                        <button type="submit" class="btn btn-secondary">Search</button>
+                        <button type="submit" class="btn bg-search">Search</button>
                     </form>
                 </div>
                 
                 <div class="table-responsive mt-4 col-12">
                     <table class="table table-striped">
-                        <thead class="bg-secondary text-light">
+                        <thead class="bg-th">
                             <tr>
                                 <th>NIP</th>
                                 <th>Nama</th>
@@ -44,7 +44,7 @@
                                 <td>{{ $pg->no_telepon }}</td>
                                 <td>{{ $pg->alamat }}</td>
                                 <td style="white-space: nowrap">
-                                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="{{ '#update'.$pg->user_id }}">Edit</button>
+                                    <button class="btn bg-secondary text-light" data-bs-toggle="modal" data-bs-target="{{ '#update'.$pg->user_id }}">Edit</button>
                                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="{{'#delete'.$pg->user_id}}">Hapus</button>
                                 </td>
                             </tr>
@@ -124,8 +124,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                             @endforeach
                         </tbody>
                     </table>
@@ -139,10 +137,9 @@
                     {{ $pegawai->links() }}
                     @endif
                 </div>
-                
-                
+
                 <div class="col-12 d-flex align-items-center justify-content-between">
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#create">Tambah Data</button>
+                    <button class="btn bg-primer" data-bs-toggle="modal" data-bs-target="#create">Tambah Data</button>
                     <div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -197,7 +194,7 @@
                     
                     <form action="{{ route('export-pdf-pegawai') }}" method="POST">
                     @csrf
-                    <button formtarget="_blank" type="submit" class="btn btn-secondary">Cetak PDF</button>
+                    <button formtarget="_blank" type="submit" class="btn bg-info text-light">Cetak PDF</button>
                     </form>
                 </div>
             </div>

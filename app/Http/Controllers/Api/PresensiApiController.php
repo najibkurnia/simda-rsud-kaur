@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Utils\Rules;
 use App\Models\Presensi;
 use App\Models\Riwayat;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,33 +43,48 @@ class PresensiApiController extends Controller
         $end_masuk = Rules::use('end_masuk');
         $start_pulang = Rules::use('start_pulang');
 
-        if ($this->current_time >= $start_masuk && $this->current_time < $start_pulang) {
-            $status = $this->current_time > $end_masuk ? 'Telat' : 'Tepat Waktu';
+        $validationUser = Presensi::where('user_id', $request->input('user_id'))->where('tanggal_presensi', $this->current_date)->first();
 
-            $presensi = new Presensi();
+        if (!$validationUser) {
+            if ($this->current_time >= $start_masuk && $this->current_time < $start_pulang) {
+                $status = $this->current_time > $end_masuk ? 'Telat' : 'Tepat Waktu';
 
-            $presensi->user_id = $request->input('user_id');
-            $presensi->tanggal_presensi = $this->current_date;
-            $presensi->jam_masuk = $this->current_time;
-            $presensi->status = $status;
-            $presensi->bukti_masuk = $proofMasuk;
+                $presensi = new Presensi();
 
-            $presensi->save();
+                $presensi->user_id = $request->input('user_id');
+                $presensi->tanggal_presensi = $this->current_date;
+                $presensi->jam_masuk = $this->current_time;
+                $presensi->status = $status;
+                $presensi->bukti_masuk = $proofMasuk;
 
-            Riwayat::create([
-                'tanggal_riwayat'   => $this->current_date,
-                'user_id'           => $request->input('user_id'),
-                'presensi_id'       => $presensi->presensi_id,
-            ]);
+                $presensi->save();
 
-            return response()->json([
-                'message'   => 'Berhasil melakukan presensi masuk',
-            ], 201);
+                Riwayat::create([
+                    'tanggal_riwayat'   => $this->current_date,
+                    'user_id'           => $request->input('user_id'),
+                    'presensi_id'       => $presensi->presensi_id,
+                ]);
+
+                $user = User::where('user_id', $request->input('user_id'))->first();
+                $user->total_hadir++;
+                if ($status == 'Telat') {
+                    $user->total_telat++;
+                }
+                $user->save();
+
+                return response()->json([
+                    'message'   => 'Berhasil melakukan presensi masuk',
+                ], 201);
+            } else {
+                return response()->json([
+                    'message'       => 'Waktu presensi masuk tidak dapat diakses untuk sekarang. karena waktu menunjukkan jam ' . $this->current_time,
+                ], 403);
+            }
         }
 
         return response()->json([
-            'message'       => 'Waktu presensi masuk tidak dapat diakses untuk sekarang. karena waktu menunjukkan jam ' . $this->current_time,
-        ], 403);
+            'message'       => 'Anda sudah melakukan presensi masuk hari ini.',
+        ], 400);
     }
 
     public function handlePresensiPulang(Request $request, $user_id): JsonResponse

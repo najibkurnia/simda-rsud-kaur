@@ -10,7 +10,7 @@
 
 @elseif(session()->has('warning'))
 <script>
-   Notiflix.Notify.waring("{{ session('warning') }}"); 
+   Notiflix.Notify.warning("{{ session('warning') }}"); 
 </script>
 
 @elseif(session()->has('error'))

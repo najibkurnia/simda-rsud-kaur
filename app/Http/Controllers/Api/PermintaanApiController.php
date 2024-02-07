@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Permintaan;
 use App\Models\Riwayat;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,6 +39,19 @@ class PermintaanApiController extends Controller
             'user_id'           => $request->input('user_id'),
             'permintaan_id'     => $permintaan->permintaan_id
         ]);
+
+        $user = User::where('user_id', $request->input('user_id'))->first();
+        if ($request->input('keperluan') == 'Dinas') {
+            $user->total_dinas++;
+        } else if ($request->input('keperluan') == 'Izin') {
+            $user->total_izin++;
+        } else if ($request->input('keperluan') == 'Sakit') {
+            $user->total_sakit++;
+        } else if ($request->input('keperluan') == 'Cuti Tahunan' || $request->input('keperluan') == 'Cuti Hamil') {
+            $user->total_cuti++;
+        }
+
+        $user->save();
 
         return response()->json([
             'data'      => $permintaan,

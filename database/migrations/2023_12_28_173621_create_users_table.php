@@ -22,6 +22,12 @@ return new class extends Migration
             $table->enum('role', ['pegawai', 'admin'])->default('pegawai');
             $table->string('alamat');
             $table->string('password');
+            $table->integer('total_hadir')->default(0);
+            $table->integer('total_dinas')->default(0);
+            $table->integer('total_cuti')->default(0);
+            $table->integer('total_izin')->default(0);
+            $table->integer('total_sakit')->default(0);
+            $table->integer('total_telat')->default(0);
             $table->timestamps();
         });
     }

@@ -24,7 +24,7 @@
         <a href="{{ route('data-pegawai') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pegawai-index' ? 'active' : null }}">
             Data PNS
         </a>
-        <a href="{{ route('data-pegawai') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pegawaiindex' ? 'active' : null }}">
+        <a href="{{ route('pengaturan') }}" class="menu-sidebar col-12 p-2 {{ $id_page == 'pengaturan-index' ? 'active' : null }}">
             Pengaturan        
         </a>
     </div>

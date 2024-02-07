@@ -2,44 +2,64 @@
 
 @section('components')
     <div class="col-12">
-        <div class="card border-primer">
+        <div class="card bg-card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h4>{{ $title }}</h4>          
-                    
-                    <div class="d-flex col-4">
-                        <input type="text" name="" class="form-control me-0 me-lg-2" placeholder="Cari data" id="">
-                        <button class="btn btn-secondary">Search</button>
-                    </div>
+                    <h4>{{ $title }}</h4>
+                    <form action="{{ route('cari-cuti') }}" class="d-flex col-4">
+                        <input type="text" name="query" required class="form-control me-0 me-lg-2" placeholder="Cari nama pegawai" id="">
+                        @if (request()->routeIs('cari-cuti'))
+                        <a href="{{ route('data-cuti') }}" class="btn border me-0 me-lg-2 border-secondary rounded-0">Back</a>
+                        @endif
+                        <button class="btn bg-search">Search</button>
+                    </form>
                 </div>
 
                 <div class="table-responsive my-4 col-12">
                     <table class="table table-striped">
-                        <thead class="bg-secondary text-light">
+                        <thead class="bg-th">
                             <tr>
                                 <th>NIP</th>
                                 <th>Nama</th>
                                 <th>Jabatan</th>
                                 <th>Mulai</th>
                                 <th>Selesai</th>
-                                <th>Surat Izin</th>
-                                <th>Surat Tugas</th>
+                                <th>Keterangan</th>
+                                <th>Bukti</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @for($i=1; $i <= 8; $i++)
+                        <tbody class="bg-td">
+                            @foreach($recapCuti as $recap)
                             <tr>
-                                <td>NIP</td>
-                                <td>Nama</td>
-                                <td>Jabatan</td>
-                                <td>Mulai</td>
-                                <td>Selesai</td>
-                                <td>Surat Izin</td>
-                                <td>Surat Tugas</td>
+                                <td>{{ $recap->user->nip }}</td>
+                                <td>{{ $recap->user->nama }}</td>
+                                <td>{{ $recap->user->jabatan->nama_jabatan }}</td>
+                                <td>{{ $recap->tanggal_awal }}</td>
+                                <td>{{ $recap->tanggal_akhir }}</td>
+                                <td>{{ $recap->keperluan }}</td>
+                                <td><a href="{{ $recap->bukti }}" class="text-danger">Lihat</a></td>
                             </tr>
-                            @endfor
+                            @endforeach
                         </tbody>
                     </table>
+
+                    <div class="d-flex mb-2 justify-content-between">
+                        @if (!$recapCuti->isEmpty())
+                        
+                        <p class="border border-dark px-2">Showing {{ $recapCuti->firstItem() }} to {{ $recapCuti->lastItem() }} of {{ $recapCuti->total() }} entries</p>
+                        {{ $recapCuti->links() }}
+                        @endif
+    
+                    </div>
+
+                    @if (!$recapCuti->isEmpty())
+                    <p class="d-flex justify-content-end">
+                        <form action="{{ route('export-pdf-cuti') }}" method="POST">
+                            @csrf
+                            <button formtarget="_blank" type="submit" class="btn btn-info text-light">Cetak PDF</button>
+                        </form>
+                    </p>
+                    @endif
                 </div>
             </div>
         </div>

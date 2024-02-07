@@ -9,8 +9,10 @@ class Jaringan extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    public $table = 'jaringan';
     protected $primaryKey = 'jaringan_id';
     protected $fillable = [
+        'nama_jaringan',
         'ip_address'
     ];
 }

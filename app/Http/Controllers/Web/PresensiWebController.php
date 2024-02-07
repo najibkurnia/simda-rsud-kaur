@@ -17,7 +17,7 @@ use Illuminate\View\View;
 
 class PresensiWebController extends Controller
 {
-    protected $current_date, $filterDate, $optFilterDate, $dataRiwayatPegawai;
+    protected $current_date, $filterDate, $optFilterDate, $dataRiwayatPegawai, $recaps;
 
     public function __construct()
     {
@@ -28,6 +28,8 @@ class PresensiWebController extends Controller
         $this->filterDate = $this->current_date;
 
         $this->dataRiwayatPegawai = Riwayat::with(['user', 'permintaan', 'presensi']);
+
+        $this->recaps = User::where('role', 'pegawai')->paginate(10);
     }
 
     public function showPresensi(): View
@@ -45,7 +47,7 @@ class PresensiWebController extends Controller
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas") as jumlah_dinas'),
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin") as jumlah_izin'),
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamilan") as jumlah_cuti'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") as jumlah_cuti'),
                 DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat) as jumlah_riwayat')
             )->paginate(10);
 
@@ -63,7 +65,7 @@ class PresensiWebController extends Controller
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas") as jumlah_dinas'),
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin") as jumlah_izin'),
                 DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamilan") as jumlah_cuti'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") as jumlah_cuti'),
                 DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat) as jumlah_riwayat')
             )->get();
 
@@ -108,8 +110,12 @@ class PresensiWebController extends Controller
     public function showRekapPresensi(): View
     {
         $data = [
-            'title'     => 'Data Presensi Bulanan',
-            'id_page'   => 'presensi-rekap',
+            'title'             => 'Data Presensi Bulanan',
+            'id_page'           => 'presensi-rekap',
+            'recaps'            => $this->recaps,
+            'countTglPresensi'  => Presensi::select(DB::raw('COUNT(DISTINCT tanggal_presensi) as count'))
+                ->first()
+                ->count,
         ];
 
         return view('components.dash.presensi.rekap', $data);
@@ -168,5 +174,31 @@ class PresensiWebController extends Controller
         ];
 
         return view('components.dash.presensi.rincian_permintaan', $data);
+    }
+
+    public function searchPegawaiRekapPresensi(Request $request)
+    {
+        $attr = [
+            'model'     => new User,
+            'field'     => is_numeric($request->input('query')) ? 'nip' : 'nama',
+            'key'       => $request->input('query')
+        ];
+
+        $this->recaps = SearchData::find($attr)->where('role', 'pegawai')->paginate(10);
+
+        return $this->showRekapPresensi();
+    }
+
+    public function handleExportPdfRekapBulanan()
+    {
+        $attr = [
+            'heading'       => 'Rekap Data Presensi & Permintaan Bulanan Pegawai',
+            'fileDir'       => 'pdf.rppb_pegawai',
+            'data'          => User::where('role', 'pegawai')->get(),
+            'countTglPresensi'  => Presensi::select(DB::raw('COUNT(DISTINCT tanggal_presensi) as count'))
+                ->first()
+                ->count,
+        ];
+        return ExportData::PDF($attr);
     }
 }

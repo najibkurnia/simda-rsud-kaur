@@ -28,7 +28,13 @@ class User extends Authenticatable
         'no_telepon',
         'role',
         'alamat',
-        'password'
+        'password',
+        'total_hadir',
+        'total_dinas',
+        'total_cuti',
+        'total_izin',
+        'total_sakit',
+        'total_telat',
     ];
     protected $primaryKey = 'user_id';
 

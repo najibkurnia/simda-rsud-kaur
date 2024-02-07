@@ -15,7 +15,7 @@
 
                         <form action="{{ route('handle-logout') }}" method="POST">
                             @csrf
-                            <button class="btn btn-danger">Logout</button>
+                            <button class="btn btn-danger">Keluar</button>
                         </form>
                     @else
                     <form action="{{ route('handle-login') }}" method="POST">
