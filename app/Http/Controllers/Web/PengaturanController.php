@@ -55,6 +55,10 @@ class PengaturanController extends Controller
 
     public function handleUseRule($rule_id): RedirectResponse
     {
+        $this->model['rule']->where('status', 'used')->update([
+            'status'    => 'unused'
+        ]);
+
         $this->model['rule']->where('status', 'unused')->where('rule_id', $rule_id)->update([
             'status'    => 'used'
         ]);
