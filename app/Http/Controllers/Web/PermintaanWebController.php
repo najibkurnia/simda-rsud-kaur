@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Utils\ExportData;
 use App\Models\Permintaan;
+use App\Models\Riwayat;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class PermintaanWebController extends Controller
@@ -14,14 +17,18 @@ class PermintaanWebController extends Controller
     protected $recapDinas;
     protected $recapIzin;
     protected $recapCuti;
+    protected $model;
 
     public function __construct()
     {
-        $model = new Permintaan;
-        $this->recapPermintaan = $model;
-        $this->recapDinas = $model->where('keperluan', 'Dinas')->where('status', 'accepted');
-        $this->recapIzin = $model->where('keperluan', 'Izin')->where('status', 'accepted');
-        $this->recapCuti = $model->where('keperluan', 'Cuti Tahunan')->orWhere('keperluan', 'Cuti Hamil')->where('status', 'accepted');
+        $this->model = [
+            'permintaan'    => new Permintaan,
+            'riwayat'       => new Riwayat,
+        ];
+        $this->recapPermintaan = $this->model['riwayat']->where('permintaan_id', '!=', null);
+        $this->recapDinas = $this->model['permintaan']->where('keperluan', 'Dinas')->where('status', 'accepted');
+        $this->recapIzin = $this->model['permintaan']->where('keperluan', 'Izin')->where('status', 'accepted');
+        $this->recapCuti = $this->model['permintaan']->where('keperluan', 'Cuti Tahunan')->orWhere('keperluan', 'Cuti Hamil')->where('status', 'accepted');
     }
 
     public function showPermintaan(): View
@@ -72,7 +79,7 @@ class PermintaanWebController extends Controller
     {
         $key = $request->input('query');
 
-        $this->recapPermintaan = Permintaan::whereHas('user', function ($query) use ($key) {
+        $this->recapPermintaan = Riwayat::whereHas('user', function ($query) use ($key) {
             $query->where('nama', 'like', '%' . $key . '%');
         });
         return $this->showPermintaan();
@@ -150,5 +157,34 @@ class PermintaanWebController extends Controller
         ];
 
         return ExportData::PDF($attr);
+    }
+
+    public function handleAccepted($permintaan_id): RedirectResponse
+    {
+        $this->model['permintaan']->where('permintaan_id', $permintaan_id)->update([
+            'status'    => 'accepted'
+        ]);
+        return back()->with('info', 'Permintaan pegawai telah disetujui');
+    }
+
+    public function handleRejected($permintaan_id): RedirectResponse
+    {
+        $this->model['permintaan']->where('permintaan_id', $permintaan_id)->update([
+            'status'    => 'rejected'
+        ]);
+        return back()->with('info', 'Permintaan pegawai telah ditolak');
+    }
+
+    public function handleUploadAttachment($permintaan_id, Request $request): RedirectResponse
+    {
+        $attachmentRequest = $request->file('surat_tugas');
+        $attachment = time() . '_' . $attachmentRequest->getClientOriginalName();
+        Storage::putFileAs('public/lampiran', $attachmentRequest, $attachment);
+
+        $this->model['permintaan']->where('permintaan_id', $permintaan_id)->update([
+            'surat_tugas'       => $attachment
+        ]);
+
+        return back()->with('success', 'Berhasil mengirim lampiran');
     }
 }

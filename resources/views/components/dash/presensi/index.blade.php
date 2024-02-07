@@ -37,7 +37,7 @@
                             <td>{{ $rn->jumlah_izin }}</td>
                             <td>{{ $rn->jumlah_sakit }}</td>
                             <td>{{ $rn->jumlah_cuti }}</td>
-                            <td>{{ $rn->jumlah_riwayat }}</td>
+                            <td>{{ $rn->jumlah_riwayat_presensi + $rn->jumlah_riwayat_permintaan }}</td>
                             <td>
                                 <a href="{{ route('detail-presensi', $rn->tanggal_riwayat) }}" class="btn bg-primer">Detail</a>
                             </td>

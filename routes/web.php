@@ -14,6 +14,7 @@ Route::post('/handle-login', [AuthenticationWebController::class, 'handleLogin']
 Route::post('/handle-logout', [AuthenticationWebController::class, 'handleLogout'])->name('handle-logout');
 
 Route::middleware('auth')->group(function () {
+    // general routes
     Route::get('/presensi', [PresensiWebController::class, 'showPresensi'])->name('presensi');
     Route::get('/detail-presensi/{tanggal_riwayat}', [PresensiWebController::class, 'showDetailPresensi'])->name('detail-presensi');
     Route::get('/rincian-presensi/{user_id}/{tanggal_riwayat}', [PresensiWebController::class, 'showRincianPresensi'])->name('rincian-presensi');
@@ -27,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/data-pegawai', [PegawaiWebController::class, 'showPegawai'])->name('data-pegawai');
     Route::get('/pengaturan', [PengaturanController::class, 'showPengaturan'])->name('pengaturan');
 
-    // crud routes
+    // crud data routes
     Route::post('/create-pegawai', [PegawaiWebController::class, 'handleCreatePegawai'])->name('create-pegawai');
     Route::put('/update-pegawai/{user_id}', [PegawaiWebController::class, 'handleUpdatePegawai'])->name('update-pegawai');
     Route::delete('/delete-pegawai/{user_id}', [PegawaiWebController::class, 'handleDeletePegawai'])->name('delete-pegawai');
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/create-jaringan', [PengaturanController::class, 'handleCreateJaringan'])->name('create-jaringan');
     Route::delete('/delete-jaringan/{jaringan_id}', [PengaturanController::class, 'handleDeleteJaringan'])->name('delete-jaringan');
 
+    Route::put('/accepted/{permintaan_id}', [PermintaanWebController::class, 'handleAccepted'])->name('accepted');
+    Route::put('/rejected/{permintaan_id}', [PermintaanWebController::class, 'handleRejected'])->name('rejected');
+    Route::put('/upload-attachment/{permintaan_id}', [PermintaanWebController::class, 'handleUploadAttachment'])->name('upload-attachment');
+
+    // export data routes
     Route::post('/export-pdf-pegawai', [PegawaiWebController::class, 'handleExportPdf'])->name('export-pdf-pegawai');
     Route::post('/export-pdf-rekap-pegawai/{tanggal_riwayat}', [PresensiWebController::class, 'handleExportPdfRekapPegawai'])->name('export-pdf-rekap-pegawai');
     Route::post('/export-pdf-rekap-bulanan', [PresensiWebController::class, 'handleExportPdfRekapBulanan'])->name('export-pdf-rekap-bulanan');
@@ -48,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/export-pdf-cuti', [PermintaanWebController::class, 'handleExportPdfCuti'])->name('export-pdf-cuti');
     Route::post('/export-pdf-pelanggaran', [PelanggaranWebController::class, 'handleExportPdfPelanggaran'])->name('export-pdf-pelanggaran');
 
+    // find data routes
     Route::prefix('/cari')->group(function () {
         Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');
         Route::get('/rekap-riwayat', [PresensiWebController::class, 'searchPreviousRecap'])->name('cari-rekap-riwayat');

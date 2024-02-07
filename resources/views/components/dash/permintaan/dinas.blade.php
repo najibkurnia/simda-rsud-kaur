@@ -39,7 +39,7 @@
                                 <td>{{ $recap->tanggal_awal }}</td>
                                 <td>{{ $recap->tanggal_akhir }}</td>
                                 <td><a href="{{ asset('storage/permintaan/'.$recap->bukti) }}" target="_blank" class="text-danger">Lihat</a></td>
-                                <td><a href="{{ $recap->surat_tugas }}" class="text-danger">Lihat</a></td>
+                                <td><a href="{{ asset('storage/lampiran/'.$recap->surat_tugas) }}" target="_blank" class="text-danger">Lihat</a></td>
                             </tr>
                             @endforeach
                         </tbody>

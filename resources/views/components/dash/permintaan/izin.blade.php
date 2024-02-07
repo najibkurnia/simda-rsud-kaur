@@ -53,12 +53,12 @@
                     </div>
 
                     @if (!$recapIzin->isEmpty())
-                    <p class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <form action="{{ route('export-pdf-izin') }}" method="POST">
                             @csrf
                             <button formtarget="_blank" type="submit" class="btn btn-info text-light">Cetak PDF</button>
                         </form>
-                    </p>
+                    </div>
                     @endif
                 </div>
             </div>

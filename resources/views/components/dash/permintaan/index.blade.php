@@ -22,18 +22,20 @@
                                 <th>NIP</th>
                                 <th>Nama</th>
                                 <th>Jabatan</th>
+                                <th>Status</th>
                                 <th>Permintaan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-td">
                             @foreach($recapPermintaan as $recap)
-                            <tr>
+                            <tr style="vertical-align: middle;">
                                 <td>{{ $recap->user->nip }}</td>
                                 <td>{{ $recap->user->nama }}</td>
                                 <td>{{ $recap->user->jabatan->nama_jabatan }}</td>
-                                <td>{{ $recap->keperluan }}</td>
-                                <td><a href="#" class="btn bg-primer">Detail</a></td>
+                                <td><span class="{{ $recap->permintaan->status == 'rejected' ? 'text-danger' : 'text-primary' }}">{{ ucfirst($recap->permintaan->status) }}</span></td>
+                                <td>{{ $recap->permintaan->keperluan }}</td>
+                                <td><a href="{{ route('rincian-permintaan', [$recap->user->user_id, $recap->tanggal_riwayat]) }}" class="btn bg-primer">Detail</a></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -49,12 +51,12 @@
                     </div>
 
                     @if (!$recapPermintaan->isEmpty())
-                    <p class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <form action="{{ route('export-pdf-permintaan') }}" method="POST">
                             @csrf
                             <button formtarget="_blank" type="submit" class="btn btn-info text-light">Cetak PDF</button>
                         </form>
-                    </p>
+                    </div>
                     @endif
                 </div>
             </div>

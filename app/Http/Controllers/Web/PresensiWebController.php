@@ -44,11 +44,13 @@ class PresensiWebController extends Controller
                 'tanggal_riwayat',
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_masuk IS NOT NULL) as jumlah_jam_masuk'),
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_pulang IS NOT NULL) as jumlah_jam_pulang'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas") as jumlah_dinas'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin") as jumlah_izin'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") as jumlah_cuti'),
-                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat) as jumlah_riwayat')
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil" AND pr.status = "accepted") as jumlah_cuti'),
+                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.presensi_id IS NOT NULL) as jumlah_riwayat_presensi'),
+                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.permintaan_id IS NOT NULL AND (SELECT status FROM permintaan WHERE permintaan_id = rw.permintaan_id) = "accepted") as jumlah_riwayat_permintaan')
+
             )->paginate(10);
 
 
@@ -62,11 +64,12 @@ class PresensiWebController extends Controller
                 'tanggal_riwayat',
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_masuk IS NOT NULL) as jumlah_jam_masuk'),
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_pulang IS NOT NULL) as jumlah_jam_pulang'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas") as jumlah_dinas'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin") as jumlah_izin'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") as jumlah_cuti'),
-                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat) as jumlah_riwayat')
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil" AND pr.status = "accepted") as jumlah_cuti'),
+                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.presensi_id IS NOT NULL) as jumlah_riwayat_presensi'),
+                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.permintaan_id IS NOT NULL AND (SELECT status FROM permintaan WHERE permintaan_id = rw.permintaan_id) = "accepted") as jumlah_riwayat_permintaan')
             )->get();
 
         $data = [
