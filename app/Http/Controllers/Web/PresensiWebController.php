@@ -29,7 +29,7 @@ class PresensiWebController extends Controller
 
         $this->dataRiwayatPegawai = Riwayat::with(['user', 'permintaan', 'presensi']);
 
-        $this->recaps = User::where('role', 'pegawai')->paginate(10);
+        $this->recaps = User::where('role', 'pegawai')->get();
     }
 
     public function showPresensi(): View
@@ -44,15 +44,18 @@ class PresensiWebController extends Controller
                 'tanggal_riwayat',
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_masuk IS NOT NULL) as jumlah_jam_masuk'),
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_pulang IS NOT NULL) as jumlah_jam_pulang'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil" AND pr.status = "accepted") as jumlah_cuti'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND (pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") AND pr.status = "accepted") as jumlah_cuti'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil" AND pr.status = "accepted") as jumlah_cuti'),
                 DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.presensi_id IS NOT NULL) as jumlah_riwayat_presensi'),
                 DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.permintaan_id IS NOT NULL AND (SELECT status FROM permintaan WHERE permintaan_id = rw.permintaan_id) = "accepted") as jumlah_riwayat_permintaan')
 
-            )->paginate(10);
-
+            )->get();
 
         $queryNowRecap = DB::table('riwayat')
             ->leftJoin('presensi', 'riwayat.presensi_id', '=', 'presensi.presensi_id')
@@ -64,11 +67,18 @@ class PresensiWebController extends Controller
                 'tanggal_riwayat',
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_masuk IS NOT NULL) as jumlah_jam_masuk'),
                 DB::raw('(SELECT COUNT(*) FROM presensi AS p WHERE p.tanggal_presensi = riwayat.tanggal_riwayat AND p.jam_pulang IS NOT NULL) as jumlah_jam_pulang'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
-                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil" AND pr.status = "accepted") as jumlah_cuti'),
-                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.presensi_id IS NOT NULL) as jumlah_riwayat_presensi'),
+
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                // DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_permintaan = riwayat.tanggal_riwayat AND (pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") AND pr.status = "accepted") as jumlah_cuti'),
+
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Dinas" AND pr.status = "accepted") as jumlah_dinas'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Izin" AND pr.status = "accepted") as jumlah_izin'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND pr.keperluan = "Sakit" AND pr.status = "accepted") as jumlah_sakit'),
+                DB::raw('(SELECT COUNT(*) FROM permintaan AS pr WHERE pr.tanggal_awal <= riwayat.tanggal_riwayat AND pr.tanggal_akhir >= riwayat.tanggal_riwayat AND (pr.keperluan = "Cuti Tahunan" OR pr.keperluan = "Cuti Hamil") AND pr.status = "accepted") as jumlah_cuti'),
+
+                DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.detail_presensi = "Masuk") as jumlah_riwayat_presensi'),
                 DB::raw('(SELECT COUNT(*) FROM riwayat AS rw WHERE rw.tanggal_riwayat = riwayat.tanggal_riwayat AND rw.permintaan_id IS NOT NULL AND (SELECT status FROM permintaan WHERE permintaan_id = rw.permintaan_id) = "accepted") as jumlah_riwayat_permintaan')
             )->get();
 
@@ -80,6 +90,9 @@ class PresensiWebController extends Controller
             'riwayatNow'   => $queryNowRecap,
         ];
 
+        // dd($queryNowRecap);
+        // dd($data['riwayatNow']);
+
         return view('components.dash.presensi.index', $data);
     }
 
@@ -88,8 +101,12 @@ class PresensiWebController extends Controller
         $data = [
             'title'             => 'Detail presensi dan permintaan',
             'id_page'           => 'presensi',
-            'tanggal_riwayat'   => $tanggal_riwayat,
-            'riwayatUser'       => $this->dataRiwayatPegawai->where('tanggal_riwayat', $tanggal_riwayat)->paginate(10),
+            'tanggal_riwayat'   => $this->current_date,
+            'riwayatUser' => $this->dataRiwayatPegawai
+                ->where('tanggal_riwayat', $this->current_date)
+                ->whereNotNull('detail_presensi')
+                ->get(),
+
         ];
 
         return view('components.dash.presensi.detail', $data);
@@ -112,11 +129,18 @@ class PresensiWebController extends Controller
 
     public function showRekapPresensi(): View
     {
+        $filterMonth = request()->input('month');
+        $filterYear = request()->input('year');
+
         $data = [
             'title'             => 'Data Presensi Bulanan',
-            'id_page'           => 'presensi-rekap',
+            'id_page'           => 'rekap-presensi',
             'recaps'            => $this->recaps,
             'countTglPresensi'  => Presensi::select(DB::raw('COUNT(DISTINCT tanggal_presensi) as count'))
+                ->when($filterMonth, function ($query) use ($filterMonth, $filterYear) {
+                    $query->whereMonth('tanggal_presensi', $filterMonth)
+                        ->whereYear('tanggal_presensi', $filterYear);
+                })
                 ->first()
                 ->count,
         ];
@@ -145,16 +169,16 @@ class PresensiWebController extends Controller
         return ExportData::PDF($attr);
     }
 
-    public function showRincianPresensi($user_id, $tanggal_riwayat)
+    public function showRincianPresensi($user_id, $riwayat_id)
     {
         $user = User::where('user_id', $user_id)->first();
-        $presensi = Presensi::where('user_id', $user_id)->where('tanggal_presensi', $tanggal_riwayat)->first();
+        $presensi = Riwayat::where('user_id', $user_id)->where('riwayat_id', $riwayat_id)->first();
 
         $data = [
-            'title'     => 'Rincian Presensi ' .  $user->nama . ' - ' . $tanggal_riwayat,
+            'title'     => 'Rincian Presensi ' .  $user->nama,
             'id_page'   => 'presensi',
             'user'      => $user,
-            'presensi'  => $presensi,
+            'riwayat'  => $presensi,
             'jadwal_masuk' => Rules::use('start_masuk'),
             'jadwal_pulang' => Rules::use('start_pulang')
         ];
@@ -162,16 +186,16 @@ class PresensiWebController extends Controller
         return view('components.dash.presensi.rincian_presensi', $data);
     }
 
-    public function showRincianPermintaan($user_id, $tanggal_riwayat)
+    public function showRincianPermintaan($user_id, $riwayat_id)
     {
         $user = User::where('user_id', $user_id)->first();
-        $permintaan = Permintaan::where('user_id', $user_id)->where('tanggal_permintaan', $tanggal_riwayat)->first();
+        $permintaan = Riwayat::where('user_id', $user_id)->where('riwayat_id', $riwayat_id)->first();
 
         $data = [
-            'title'     => 'Rincian permintaan ' .  $user->nama . ' - ' . $tanggal_riwayat,
+            'title'     => 'Rincian permintaan ' .  $user->nama,
             'id_page'   => 'permintaan',
             'user'      => $user,
-            'permintaan'  => $permintaan,
+            'riwayat'  => $permintaan,
             'jadwal_masuk' => Rules::use('start_masuk'),
             'jadwal_pulang' => Rules::use('start_pulang')
         ];
@@ -187,7 +211,7 @@ class PresensiWebController extends Controller
             'key'       => $request->input('query')
         ];
 
-        $this->recaps = SearchData::find($attr)->where('role', 'pegawai')->paginate(10);
+        $this->recaps = SearchData::find($attr)->where('role', 'pegawai')->get();
 
         return $this->showRekapPresensi();
     }

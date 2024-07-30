@@ -20,11 +20,7 @@
             <td>{{ $riwayat->user->jabatan->nama_jabatan }}</td>
             <td>
                 @if ($riwayat->presensi != null)
-                @if ($riwayat->presensi->jam_masuk != null)
-                <span>Masuk - {{ $riwayat->presensi->jam_masuk }}</span>
-                @else    
-                <span>Pulang - {{ $riwayat->presensi->jam_pulang }}</span>
-                @endif
+                <span>{{ $riwayat->detail_presensi }}</span>
                 @else 
                 <span>{{ $riwayat->permintaan->keperluan }}</span>
                 @endif

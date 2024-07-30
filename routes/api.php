@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationApiController;
+use App\Http\Controllers\Api\DataCollectionController;
 use App\Http\Controllers\Api\PermintaanApiController;
 use App\Http\Controllers\Api\PresensiApiController;
+use App\Http\Controllers\Web\PengaturanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +22,10 @@ Route::post('/login', [AuthenticationApiController::class, 'login']);
 Route::post('/logout', [AuthenticationApiController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/riwayat-presensi/{user_id}', [DataCollectionController::class, 'getRiwayatPresensi']);
+    Route::get('/riwayat-permintaan/{user_id}', [DataCollectionController::class, 'getRiwayatPermintaan']);
     Route::post('/handle-presensi-masuk', [PresensiApiController::class, 'handlePresensiMasuk']);
-    Route::put('/handle-presensi-pulang/{user_id}', [PresensiApiController::class, 'handlePresensiPulang']);
+    Route::post('/handle-presensi-pulang/{user_id}', [PresensiApiController::class, 'handlePresensiPulang']);
     Route::post('/handle-permintaan', [PermintaanApiController::class, 'handlePermintaan']);
+    Route::post('/change-password', [PengaturanController::class, 'handleChangePassword']);
 });

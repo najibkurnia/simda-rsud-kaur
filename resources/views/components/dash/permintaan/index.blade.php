@@ -1,64 +1,79 @@
 @extends('core.app')
 
 @section('components')
-    <div class="col-12">
-        <div class="card bg-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4>{{ $title }}</h4>
-                    <form action="{{ route('cari-permintaan') }}" class="d-flex col-4">
-                        <input type="text" name="query" required class="form-control me-0 me-lg-2" placeholder="Cari nama pegawai" id="">
-                        @if (request()->routeIs('cari-permintaan'))
-                        <a href="{{ route('data-permintaan') }}" class="btn border me-0 me-lg-2 border-secondary rounded-0">Back</a>
-                        @endif
-                        <button class="btn bg-search">Search</button>
-                    </form>
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h5 class="card-title text-white">Data Permintaan</h5>
+            <div class="card-footer">
+                <div>
+                    @if (!$recapPermintaan->isEmpty())
+                        <div class="d-flex justify-content-end">
+                            <form action="{{ route('export-pdf-permintaan') }}" method="POST">
+                                @csrf
+                                <button formtarget="_blank" type="submit" class="btn btn-danger text-light cstm">Cetak
+                                    PDF</button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
-
-                <div class="table-responsive my-4 col-12">
-                    <table class="table table-striped">
-                        <thead class="bg-th">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="data2" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>NIP</th>
+                            <th>Nama</th>
+                            <th>Jabatan</th>
+                            <th>Status</th>
+                            <th>Permintaan</th>
+                            <th>Tanggal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $sortedRecapPermintaan = $recapPermintaan->sortBy(function ($recap) {
+                                switch ($recap->permintaan->status) {
+                                    case 'pending':
+                                        return 0;
+                                    case 'accepted':
+                                        return 1;
+                                    case 'rejected':
+                                        return 2;
+                                    default:
+                                        return 3; // for any other status (if any)
+                                }
+                            });
+                        @endphp
+                        @foreach ($sortedRecapPermintaan as $recap)
                             <tr>
-                                <th>NIP</th>
-                                <th>Nama</th>
-                                <th>Jabatan</th>
-                                <th>Status</th>
-                                <th>Permintaan</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-td">
-                            @foreach($recapPermintaan as $recap)
-                            <tr style="vertical-align: middle;">
                                 <td>{{ $recap->user->nip }}</td>
                                 <td>{{ $recap->user->nama }}</td>
                                 <td>{{ $recap->user->jabatan->nama_jabatan }}</td>
-                                <td><span class="{{ $recap->permintaan->status == 'rejected' ? 'text-danger' : 'text-primary' }}">{{ ucfirst($recap->permintaan->status) }}</span></td>
+                                <td>
+                                    @if ($recap->permintaan->status == 'rejected')
+                                        <span
+                                            class="bg-danger rounded text-light px-2">{{ ucfirst($recap->permintaan->status) }}</span>
+                                    @elseif($recap->permintaan->status == 'accepted')
+                                        <span
+                                            class="bg-success rounded text-light px-2">{{ ucfirst($recap->permintaan->status) }}</span>
+                                    @elseif($recap->permintaan->status == 'pending')
+                                        <span
+                                            class="bg-warning rounded text-light px-2">{{ ucfirst($recap->permintaan->status) }}</span>
+                                    @else
+                                        <span class="bg-primer rounded text-light px-2">N/A</span>
+                                    @endif
+                                </td>
                                 <td>{{ $recap->permintaan->keperluan }}</td>
-                                <td><a href="{{ route('rincian-permintaan', [$recap->user->user_id, $recap->tanggal_riwayat]) }}" class="btn bg-primer">Detail</a></td>
+                                <td>{{ $recap->permintaan->tanggal_permintaan }}</td>
+                                <td><a href="{{ route('rincian-permintaan', [$recap->user->user_id, $recap->riwayat_id]) }}"
+                                        class="btn btn-primary cstm">Detail</a></td>
                             </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    <div class="d-flex mb-2 justify-content-between">
-                        @if (!$recapPermintaan->isEmpty())
-                        
-                        <p class="border border-dark px-2">Showing {{ $recapPermintaan->firstItem() }} to {{ $recapPermintaan->lastItem() }} of {{ $recapPermintaan->total() }} entries</p>
-                        {{ $recapPermintaan->links() }}
-                        @endif
-    
-                    </div>
-
-                    @if (!$recapPermintaan->isEmpty())
-                    <div class="d-flex justify-content-end">
-                        <form action="{{ route('export-pdf-permintaan') }}" method="POST">
-                            @csrf
-                            <button formtarget="_blank" type="submit" class="btn btn-info text-light">Cetak PDF</button>
-                        </form>
-                    </div>
-                    @endif
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

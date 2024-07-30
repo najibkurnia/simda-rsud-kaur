@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id('riwayat_id');
             $table->string('tanggal_riwayat');
             $table->foreignId('user_id')->constrained('users', 'user_id')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('detail_presensi')->nullable();
             $table->foreignId('presensi_id')->nullable()->constrained('presensi', 'presensi_id')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('permintaan_id')->nullable()->constrained('permintaan', 'permintaan_id')->nullOnDelete()->cascadeOnUpdate();
+            $table->time('created_time_at')->nullable();
         });
     }
 

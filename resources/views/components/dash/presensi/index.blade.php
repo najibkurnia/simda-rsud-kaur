@@ -1,124 +1,97 @@
 @extends('core.app')
 
 @section('components')
-<div class="col-12 mb-5">
-    <div class="card bg-card">
-        <div class="card-body">
-            <strong>
-                <span>PRESENSI HARI INI</span>
-            </strong>
-            <div class="my-3">
-                <div class="p-2 bg-primer rounded d-inline">Presensi</div>
+    <div class="col hrini">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h5 class="card-title text-white">Absensi Hari Ini</h5>
             </div>
-            
-            <div class="table-responsive my-3">
-                <table class="table" style="white-space: nowrap; border: 1px solid #aaa">
-                    <thead class="bg-th">
-                        <tr>
-                            <th>Pegawai</th>
-                            <th>Masuk</th>
-                            <th>Pulang</th>
-                            <th>Dinas</th>
-                            <th>Izin</th>
-                            <th>Sakit</th>
-                            <th>Cuti</th>
-                            <th>Total</th>
-                            <th>Detail</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody class="bg-td" style="vertical-align: middle">
-                        @foreach ($riwayatNow as $rn)
-                        <tr>
-                            <td>{{ $ttl_pegawai }}</td>
-                            <td>{{ $rn->jumlah_jam_masuk}}</td>
-                            <td>{{ $rn->jumlah_jam_pulang}}</td>
-                            <td>{{ $rn->jumlah_dinas }}</td>
-                            <td>{{ $rn->jumlah_izin }}</td>
-                            <td>{{ $rn->jumlah_sakit }}</td>
-                            <td>{{ $rn->jumlah_cuti }}</td>
-                            <td>{{ $rn->jumlah_riwayat_presensi + $rn->jumlah_riwayat_permintaan }}</td>
-                            <td>
-                                <a href="{{ route('detail-presensi', $rn->tanggal_riwayat) }}" class="btn bg-primer">Detail</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    
-                </table>
-                
-                
-                @if ($riwayatNow->isEmpty())
-                <p class="text-secondary">Data presensi dan permintaan belum ada hari ini!</p>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center">Pegawai</th>
+                                <th style="text-align: center">Masuk</th>
+                                <th style="text-align: center">Pulang</th>
+                                <th style="text-align: center">Dinas</th>
+                                <th style="text-align: center">Izin</th>
+                                <th style="text-align: center">Sakit</th>
+                                <th style="text-align: center">Cuti</th>
+                                <th style="text-align: center">Total</th>
+                                <th style="text-align: center">Detail</th>
+                            </tr>
+                        </thead>
 
-<div class="col-12">
-    <div class="card bg-card">
-        <div class="card-body">
-            <strong>
-                <span>RIWAYAT PRESENSI</span>
-            </strong>
-            
-            <div class="row my-3 justify-content-end">
-                <form action="{{ route('cari-rekap-riwayat') }}" class="col-4 d-flex align-items-center" style="gap: 10px">
-                    <input type="date" name="query" required class="form-control">
-                    @if (request()->routeIs('cari-rekap-riwayat'))
-                    <a href="{{ route('presensi') }}" class="btn border border-secondary rounded-0">Back</a>
-                    @endif
-                    <button class="btn bg-search">Search</button>
-                </form>
-            </div>
-            
-            <div class="table-responsive">
-                <table class="table table-striped" style="white-space: nowrap; border: 1px solid #aaa">
-                    <thead class="bg-th">
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Pegawai</th>
-                            <th>Masuk</th>
-                            <th>Pulang</th>
-                            <th>Dinas</th>
-                            <th>Izin</th>
-                            <th>Sakit</th>
-                            <th>Cuti</th>
-                            <th>Total</th>
-                            <th>Detail</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody class="bg-td" style="vertical-align: middle">
-                        @foreach($riwayatPrev as $rp) 
-                        <tr>
-                            <td>{{ $rp->tanggal_riwayat }}</td>
-                            <td>{{ $ttl_pegawai }}</td>
-                            <td>{{ $rp->jumlah_jam_masuk }}</td>
-                            <td>{{ $rp->jumlah_jam_pulang }}</td>
-                            <td>{{ $rp->jumlah_dinas }}</td>
-                            <td>{{ $rp->jumlah_izin }}</td>
-                            <td>{{ $rp->jumlah_sakit }}</td>
-                            <td>{{ $rp->jumlah_cuti }}</td>
-                            <td>{{ $rp->jumlah_riwayat }}</td>
-                            <td>
-                                <a href="{{ route('detail-presensi', $rp->riwayat_id) }}" class="btn bg-primer">Detail</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                
-                <div class="d-flex mb-2 justify-content-between">
-                    @if (!$riwayatPrev->isEmpty())
-                    
-                    <p class="border border-dark px-2">Showing {{ $riwayatPrev->firstItem() }} to {{ $riwayatPrev->lastItem() }} of {{ $riwayatPrev->total() }} entries</p>
-                    {{ $riwayatPrev->links() }}
-                    @endif
+                        <tbody>
+                            @foreach ($riwayatNow as $rn)
+                                <tr>
+                                    <td style="text-align: center">{{ $ttl_pegawai }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_jam_masuk }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_jam_pulang }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_dinas }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_izin }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_sakit }}</td>
+                                    <td style="text-align: center">{{ $rn->jumlah_cuti }}</td>
+                                    <td style="text-align: center">
+                                        {{ $rn->jumlah_jam_masuk + $rn->jumlah_dinas + $rn->jumlah_izin + $rn->jumlah_sakit + $rn->jumlah_cuti }}</td>
+                                    <td style="text-align: center">
+                                        <a href="{{ route('detail-presensi', $rn->tanggal_riwayat) }}"
+                                            class="btn btn-primary cstm">Detail</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h5 class="card-title text-white">Riwayat Absensi</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data1" class="table table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Pegawai</th>
+                                <th>Masuk</th>
+                                <th>Pulang</th>
+                                <th>Dinas</th>
+                                <th>Izin</th>
+                                <th>Sakit</th>
+                                <th>Cuti</th>
+                                <th>Total</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($riwayatPrev as $rp)
+                                <tr>
+                                    <td>{{ $rp->tanggal_riwayat }}</td>
+                                    <td style="text-align: center">{{ $ttl_pegawai }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_jam_masuk }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_jam_pulang }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_dinas }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_izin }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_sakit }}</td>
+                                    <td style="text-align: center">{{ $rp->jumlah_cuti }}</td>
+                                    <td style="text-align: center">
+                                        {{ $rp->jumlah_jam_masuk + $rp->jumlah_dinas + $rp->jumlah_izin + $rp->jumlah_sakit + $rp->jumlah_cuti }}</td>
+                                    <td>
+                                        <a href="{{ route('detail-presensi', $rp->riwayat_id) }}"
+                                            class="btn btn-primary cstm">Detail</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

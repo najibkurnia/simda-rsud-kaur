@@ -27,7 +27,7 @@ class PermintaanWebController extends Controller
         ];
         $this->recapPermintaan = $this->model['riwayat']->where('permintaan_id', '!=', null);
         $this->recapDinas = $this->model['permintaan']->where('keperluan', 'Dinas')->where('status', 'accepted');
-        $this->recapIzin = $this->model['permintaan']->where('keperluan', 'Izin')->where('status', 'accepted');
+        $this->recapIzin = $this->model['permintaan']->where('keperluan', 'Izin')->orWhere('keperluan', 'Sakit')->where('status', 'accepted');
         $this->recapCuti = $this->model['permintaan']->where('keperluan', 'Cuti Tahunan')->orWhere('keperluan', 'Cuti Hamil')->where('status', 'accepted');
     }
 
@@ -36,7 +36,7 @@ class PermintaanWebController extends Controller
         $data = [
             'title'             => 'Data Permintaan',
             'id_page'           => 'permintaan-index',
-            'recapPermintaan'   => $this->recapPermintaan->paginate(10)
+            'recapPermintaan'   => $this->recapPermintaan->get(),
         ];
 
         return view('components.dash.permintaan.index', $data);
@@ -47,7 +47,7 @@ class PermintaanWebController extends Controller
         $data = [
             'title'     => 'Data Izin',
             'id_page'   => 'permintaan-izin',
-            'recapIzin' => $this->recapIzin->paginate(10)
+            'recapIzin' => $this->recapIzin->get(),
         ];
         return view('components.dash.permintaan.izin', $data);
     }
@@ -57,7 +57,7 @@ class PermintaanWebController extends Controller
         $data = [
             'title'         => 'Data Dinas',
             'id_page'       => 'permintaan-dinas',
-            'recapDinas'    => $this->recapDinas->paginate(10),
+            'recapDinas'    => $this->recapDinas->get(),
         ];
 
         return view('components.dash.permintaan.dinas', $data);
@@ -68,7 +68,7 @@ class PermintaanWebController extends Controller
         $data = [
             'title'     => 'Data Cuti',
             'id_page'   => 'permintaan-cuti',
-            'recapCuti' => $this->recapCuti->paginate(10),
+            'recapCuti' => $this->recapCuti->get(),
         ];
 
         return view('components.dash.permintaan.cuti', $data);
@@ -123,7 +123,7 @@ class PermintaanWebController extends Controller
 
         $this->recapIzin = Permintaan::whereHas('user', function ($query) use ($key) {
             $query->where('nama', 'like', '%' . $key . '%');
-        })->where('keperluan', 'Izin')->where('status', 'accepted');
+        })->where('keperluan', 'Izin')->orWhere('keperluan', 'Sakit')->where('status', 'accepted');
         return $this->showDataIzin();
     }
 
@@ -164,7 +164,7 @@ class PermintaanWebController extends Controller
         $this->model['permintaan']->where('permintaan_id', $permintaan_id)->update([
             'status'    => 'accepted'
         ]);
-        return back()->with('info', 'Permintaan pegawai telah disetujui');
+        return back();
     }
 
     public function handleRejected($permintaan_id): RedirectResponse
@@ -172,7 +172,7 @@ class PermintaanWebController extends Controller
         $this->model['permintaan']->where('permintaan_id', $permintaan_id)->update([
             'status'    => 'rejected'
         ]);
-        return back()->with('info', 'Permintaan pegawai telah ditolak');
+        return back();
     }
 
     public function handleUploadAttachment($permintaan_id, Request $request): RedirectResponse
@@ -185,6 +185,6 @@ class PermintaanWebController extends Controller
             'surat_tugas'       => $attachment
         ]);
 
-        return back()->with('success', 'Berhasil mengirim lampiran');
+        return back();
     }
 }

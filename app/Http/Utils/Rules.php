@@ -19,8 +19,6 @@ class Rules
             'start_masuk' => $instance->model->start_masuk,
             'end_masuk' => $instance->model->end_masuk,
             'start_pulang' => $instance->model->start_pulang,
-            'longitude' => $instance->model->longitude,
-            'latitude' => $instance->model->latitude,
         ];
 
         return $data[$param];

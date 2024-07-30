@@ -15,8 +15,10 @@ class Riwayat extends Model
     protected $fillable = [
         'tanggal_riwayat',
         'user_id',
+        'detail_presensi',
         'presensi_id',
-        'permintaan_id'
+        'permintaan_id',
+        'created_time_at',
     ];
 
     public function user(): BelongsTo

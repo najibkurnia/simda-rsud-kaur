@@ -27,7 +27,11 @@ class PegawaiWebController extends Controller
             'golongan'  => new Golongan,
         ];
 
-        $this->dataPegawai = $this->model['user']->with(['pangkat', 'golongan', 'jabatan'])->where('role', 'pegawai')->orderBy('user_id', 'DESC')->paginate(10);
+        $this->dataPegawai = $this->model['user']
+            ->with(['pangkat', 'golongan', 'jabatan'])
+            ->where('role', 'pegawai')
+            ->orderBy('user_id', 'DESC')
+            ->get();
     }
 
     public function showPegawai(): View
@@ -42,19 +46,6 @@ class PegawaiWebController extends Controller
         ];
 
         return view('components.dash.pegawai.index', $data);
-    }
-
-    public function searchPegawai(Request $request)
-    {
-        $attr = [
-            'model'     => $this->model['user'],
-            'field'     => is_numeric($request->input('query')) ? 'nip' : 'nama',
-            'key'       => $request->input('query')
-        ];
-
-        $this->dataPegawai = SearchData::find($attr)->where('role', 'pegawai')->paginate(10);
-
-        return $this->showPegawai();
     }
 
     public function fieldUser($request)
@@ -93,21 +84,26 @@ class PegawaiWebController extends Controller
 
     public function handleUpdatePegawai(Request $request, $user_id): RedirectResponse
     {
+        // 1. Mencari pengguna dengan ID yang diberikan
         $user = $this->model['user']->find($user_id);
+
+        // 2. Melakukan validasi terhadap NIP yang baru dimasukkan
         $otherUser = $this->nipUniqueValidation($request->input('nip'));
 
-        if ($user->nip != $request->input('nip')) {
-            if (!$otherUser) {
-                $userData = $this->fieldUser($request);
-                $this->model['user']->where('user_id', $user_id)->update($userData);
-                return back()->with('info', 'Berhasil memperbarui akun pegawai');
-            } else {
-                return back()->with('error', 'NIP yang dimasukkan telah terdaftar sebelumnya');
-            }
+        // 3. NIP baru tidak sama dengan NIP data atau NIP baru sama dengan NIP pengguna, tetap diperbarui
+        if (!$otherUser || $user->nip === $request->input('nip')) {
+            $userData = $this->fieldUser($request);
+            $this->model['user']->where('user_id', $user_id)->update($userData);
+            return back()->with('info', 'Berhasil memperbarui akun pegawai');
+        }
+        // 4. Jika NIP yang baru sudah ada dalam data pengguna lain, program akan memberikan pesan kesalahan
+        else {
+            return back()->with('error', 'NIP yang dimasukkan telah terdaftar sebelumnya');
         }
 
         return back();
     }
+
 
     public function handleDeletePegawai($user_id): RedirectResponse
     {

@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthenticationApiController extends Controller
@@ -28,7 +27,7 @@ class AuthenticationApiController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'NIP & Password tidak boleh kosong!'
+                'message' => 'Mohon maaf, NIP dan Password tidak boleh kosong!'
             ], 400);
         }
 
@@ -52,7 +51,7 @@ class AuthenticationApiController extends Controller
         }
 
         return response()->json([
-            'message'  => 'Maaf, Akun tidak ditemukan'
+            'message'  => 'Mohon maaf, silahkan periksa NIP dan Password anda!'
         ], 401);
     }
 

@@ -17,8 +17,8 @@ Route::middleware('auth')->group(function () {
     // general routes
     Route::get('/presensi', [PresensiWebController::class, 'showPresensi'])->name('presensi');
     Route::get('/detail-presensi/{tanggal_riwayat}', [PresensiWebController::class, 'showDetailPresensi'])->name('detail-presensi');
-    Route::get('/rincian-presensi/{user_id}/{tanggal_riwayat}', [PresensiWebController::class, 'showRincianPresensi'])->name('rincian-presensi');
-    Route::get('/rincian-permintaan/{user_id}/{tanggal_riwayat}', [PresensiWebController::class, 'showRincianPermintaan'])->name('rincian-permintaan');
+    Route::get('/rincian-presensi/{user_id}/{riwayat_id}', [PresensiWebController::class, 'showRincianPresensi'])->name('rincian-presensi');
+    Route::get('/rincian-permintaan/{user_id}/{riwayat_id}', [PresensiWebController::class, 'showRincianPermintaan'])->name('rincian-permintaan');
     Route::get('/rekap-presensi', [PresensiWebController::class, 'showRekapPresensi'])->name('rekap-presensi');
     Route::get('/data-permintaan', [PermintaanWebController::class, 'showPermintaan'])->name('data-permintaan');
     Route::get('/data-izin', [PermintaanWebController::class, 'showDataIzin'])->name('data-izin');
@@ -56,7 +56,6 @@ Route::middleware('auth')->group(function () {
 
     // find data routes
     Route::prefix('/cari')->group(function () {
-        Route::get('/pegawai', [PegawaiWebController::class, 'searchPegawai'])->name('cari-pegawai');
         Route::get('/rekap-riwayat', [PresensiWebController::class, 'searchPreviousRecap'])->name('cari-rekap-riwayat');
         Route::get('/rekap-riwayat-pegawai/{tanggal_riwayat}', [PresensiWebController::class, 'searchRekapRiwayatPegawai'])->name('cari-rekap-riwayat-pegawai');
         Route::get('/rekap-bulanan-pegawai', [PresensiWebController::class, 'searchPegawaiRekapPresensi'])->name('cari-rekap-bulanan-pegawai');

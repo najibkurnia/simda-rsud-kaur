@@ -17,18 +17,24 @@ class PelanggaranWebController extends Controller
 
     public function __construct()
     {
-        $this->recapPelanggaran = User::where('role', 'pegawai')->paginate(10);
+        $this->recapPelanggaran = User::where('role', 'pegawai')->get();
     }
 
-    public function showPelanggaran(): View
+    public function showPelanggaran(Request $request): View
     {
+        $filterYear = $request->input('year');
+
         $data = [
             'title'             => 'Data Pelanggaran',
             'id_page'           => 'pelanggaran-index',
             'recapPelanggaran'  => $this->recapPelanggaran,
             'countTglPresensi'  => Presensi::select(DB::raw('COUNT(DISTINCT tanggal_presensi) as count'))
+                ->when($filterYear, function ($query) use ($filterYear) {
+                    $query->whereYear('tanggal_presensi', $filterYear);
+                })
                 ->first()
                 ->count,
+            'years' => range(date('Y'), date('Y') - 10), // For year dropdown
         ];
 
         return view('components.dash.pelanggaran.index', $data);
@@ -44,7 +50,7 @@ class PelanggaranWebController extends Controller
 
         $this->recapPelanggaran = SearchData::find($attr)->where('role', 'pegawai')->paginate(10);
 
-        return $this->showRekapPresensi();
+        return $this->showPelanggaran($request);
     }
 
     public function handleExportPdfPelanggaran()

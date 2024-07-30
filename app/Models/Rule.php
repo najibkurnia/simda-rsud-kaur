@@ -13,8 +13,6 @@ class Rule extends Model
         'start_masuk',
         'end_masuk',
         'start_pulang',
-        'longitude',
-        'latitude',
         'status'
     ];
 }

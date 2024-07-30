@@ -8,6 +8,8 @@ use App\Models\Rule;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class PengaturanController extends Controller
 {
@@ -45,8 +47,6 @@ class PengaturanController extends Controller
             'start_masuk'   => $request->input('start_masuk'),
             'end_masuk'   => $request->input('end_masuk'),
             'start_pulang'   => $request->input('start_pulang'),
-            'longitude'   => $request->input('longitude'),
-            'latitude'   => $request->input('latitude'),
             'status'    => $status,
         ]);
 
@@ -88,5 +88,38 @@ class PengaturanController extends Controller
         $this->model['jaringan']->where('jaringan_id', $jaringan_id)->delete();
 
         return redirect('/pengaturan#jaringan')->with('warning', 'Ketentuan jaringan telah dihapus!');
+    }
+
+    public function handleChangePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'oldPassword'       => 'required',
+            'newPassword'       => 'required',
+            'retypePassword'    => 'required|same:newPassword', // Pastikan cocok dengan password baru
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success'   => false,
+                'message'   => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $user = $request->user();
+
+        if (!Hash::check($request->oldPassword, $user->password)) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Password lama Anda salah'
+            ], 400);
+        }
+
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Password berhasil diperbarui'
+        ], 200);
     }
 }

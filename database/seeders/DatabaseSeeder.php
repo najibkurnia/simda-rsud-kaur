@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
             PangkatSeeder::class,
             UserSeeder::class,
             RuleSeeder::class,
+            PermintaanSeeder::class,
+            PresensiSeeder::class,
+            RiwayatSeeder::class,
         ]);
     }
 }
