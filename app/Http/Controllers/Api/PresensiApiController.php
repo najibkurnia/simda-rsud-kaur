@@ -28,11 +28,11 @@ class PresensiApiController extends Controller
     public function handlePresensiMasuk(Request $request): JsonResponse
     {
         $allowedIpAddress = Jaringan::where('ip_address', $request->ip_address)->first();
-        if (!$allowedIpAddress) {
-            return response()->json([
-                'message'   => 'Pastikan anda terhubung dengan internet kantor'
-            ], 403);
-        }
+        // if (!$allowedIpAddress) {
+        //     return response()->json([
+        //         'message'   => 'Pastikan anda terhubung dengan internet kantor'
+        //     ], 403);
+        // }
 
         date_default_timezone_set('Asia/Jakarta');
 
@@ -93,11 +93,11 @@ class PresensiApiController extends Controller
     public function handlePresensiPulang(Request $request, $user_id): JsonResponse
     {
         $allowedIpAddress = Jaringan::where('ip_address', $request->ip_address)->first();
-        if (!$allowedIpAddress) {
-            return response()->json([
-                'message'   => 'Pastikan anda terhubung dengan internet kantor'
-            ], 403);
-        }
+        // if (!$allowedIpAddress) {
+        //     return response()->json([
+        //         'message'   => 'Pastikan anda terhubung dengan internet kantor'
+        //     ], 403);
+        // }
 
         $proofRequest = $request->file('bukti_pulang');
         $proofPulang = time() . '_' . $proofRequest->getClientOriginalName();

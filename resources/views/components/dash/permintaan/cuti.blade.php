@@ -41,7 +41,7 @@
                                 <td>{{ $recap->tanggal_awal }}</td>
                                 <td>{{ $recap->tanggal_akhir }}</td>
                                 <td>{{ $recap->keperluan }}</td>
-                                <td><a href="{{ $recap->bukti }}" class="text-danger">Lihat</a></td>
+                                <td><a href="storage/permintaan/{{ $recap->bukti }}" class="text-danger">Lihat</a></td>
                             </tr>
                         @endforeach
                     </tbody>
